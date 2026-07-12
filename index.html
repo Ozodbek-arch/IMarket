@@ -3,71 +3,68 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>iMarket — Sifatli aksessuarlar bitta joyda</title>
+<title>iMarket — Premium Aksessuarlar</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#f6f7f9;
-    --card:#ffffff;
-    --ink:#0b0b0f;
-    --muted:#6b7280;
-    --line:#eceef2;
-    --chip:#f2f3f5;
+  :root {
+    --bg: #f6f7f9;
+    --card: #ffffff;
+    --ink: #0b0b0f;
+    --muted: #6b7280;
+    --line: #eceef2;
+    --chip: #f2f3f5;
   }
-  html,body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;}
-  .btn-dark{background:#0b0b0f;color:#fff;border-radius:12px;transition:.2s;}
-  .btn-dark:hover{background:#1f1f27;}
-  .chip{background:var(--chip);border-radius:10px;}
-  .nav-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:#3a3a44;font-weight:500;cursor:pointer;transition:.15s;}
-  .nav-item:hover{background:#f2f3f5;}
-  .nav-item.active{background:#0b0b0f;color:#fff;}
-  .nav-item.active svg{color:#fff;}
-  .icon{width:20px;height:20px;stroke-width:1.8;}
-  .qty{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:4px 8px;}
-  .qty button{width:22px;height:22px;display:grid;place-items:center;border-radius:6px;background:#f2f3f5;font-weight:600;}
-  .hero{background:linear-gradient(180deg,#f4f5f7 0%,#e9ebef 100%);border-radius:20px;}
-  .dot{width:6px;height:6px;border-radius:99px;background:#c9ccd3;display:inline-block;}
-  .dot.active{background:#0b0b0f;width:22px;border-radius:6px;}
-  .cat-tile{aspect-ratio:1/1;display:grid;place-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;transition:.15s;cursor:pointer;}
-  .cat-tile:hover{transform:translateY(-2px);box-shadow:0 8px 24px -18px rgba(0,0,0,.35);}
-  .promo{background:#0b0b0f;color:#fff;border-radius:20px;overflow:hidden;position:relative;}
-  .promo.light{background:#eef0f3;color:#0b0b0f;}
-  .badge{background:#0b0b0f;color:#fff;font-size:10px;padding:2px 8px;border-radius:99px;}
+  .dark-mode {
+    --bg: #0b0b0f;
+    --card: #16161e;
+    --ink: #ffffff;
+    --muted: #9ca3af;
+    --line: #262631;
+    --chip: #22222f;
+  }
+  html, body { background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; transition: background 0.3s, color 0.3s; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; }
+  .btn-dark { background: var(--ink); color: var(--bg); border: 1px solid var(--line); border-radius: 12px; transition: .2s; }
+  .btn-dark:hover { opacity: 0.9; }
+  .chip { background: var(--chip); border-radius: 10px; }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; color: var(--muted); font-weight: 500; cursor: pointer; transition: .15s; }
+  .nav-item:hover, .nav-item.active { background: var(--chip); color: var(--ink); }
+  .qty { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 10px; padding: 4px 8px; background: var(--card); }
+  .qty button { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; background: var(--chip); font-weight: 600; }
+  .hero { background: linear-gradient(180deg, var(--chip) 0%, var(--line) 100%); border-radius: 20px; }
+  .cat-tile { aspect-ratio: 1/1; display: grid; place-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 16px; transition: .15s; cursor: pointer; }
+  .cat-tile:hover { transform: translateY(-2px); }
+  .promo { background: var(--ink); color: var(--bg); border-radius: 20px; overflow: hidden; position: relative; }
+  .promo.light { background: var(--chip); color: var(--ink); }
+  .badge { background: var(--ink); color: var(--bg); font-size: 10px; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line); }
+  
+  /* Modal oynasi uchun */
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; place-items: center; backdrop-filter: blur(4px); }
+  .modal.active { display: grid; }
 </style>
 </head>
 <body class="min-h-screen">
 
-<!-- Top bar -->
-<header class="w-full border-b border-[var(--line)] bg-white">
-  <div class="max-w-[1400px] mx-auto px-6 py-4 flex items-center gap-6">
+<header class="w-full border-b border-[var(--line)] bg-[var(--card)] sticky top-0 z-40">
+  <div class="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between gap-6">
     <div class="text-2xl font-extrabold tracking-tight">iMarket</div>
-    <div class="flex-1 max-w-2xl relative">
-      <svg class="icon absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input placeholder="Mahsulot, kategoriya yoki brend qidiring..." class="w-full pl-12 pr-14 py-3 rounded-xl bg-[var(--chip)] outline-none text-sm"/>
-      <button class="btn-dark absolute right-1.5 top-1/2 -translate-y-1/2 w-10 h-10 grid place-items-center">
-        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      </button>
+    <div class="flex-1 max-w-2xl relative hidden md:block">
+      <input id="search-input" oninput="filterProducts()" placeholder="Mahsulot qidiring..." class="w-full pl-6 pr-14 py-3 rounded-xl bg-[var(--chip)] outline-none text-sm text-[var(--ink)] border border-[var(--line)]"/>
     </div>
-    <button class="flex items-center gap-2 text-sm font-medium">
-      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
-      Sevimlilar
-    </button>
-    <button class="flex items-center gap-2 text-sm font-medium relative">
-      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-      Bildirishnomalar
-      <span class="badge absolute -top-2 left-4">3</span>
-    </button>
-    <div class="flex items-center gap-3 pl-4 border-l border-[var(--line)]">
-      <div class="w-10 h-10 rounded-full bg-[var(--chip)] grid place-items-center">
-        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-      </div>
-      <div class="text-sm leading-tight">
-        <div class="font-semibold">Mening profilim</div>
-        <div class="text-[var(--muted)] text-xs">Kirish / Ro'yxatdan o'tish</div>
+    
+    <div class="flex items-center gap-6">
+      <button class="flex items-center gap-2 text-sm font-medium relative">
+        Bildirishnomalar <span class="badge">3</span>
+      </button>
+      <div class="flex items-center gap-3 pl-4 border-l border-[var(--line)]">
+        <div class="w-10 h-10 rounded-full bg-[var(--chip)] grid place-items-center text-xl">👤</div>
+        <div class="text-sm leading-tight hidden lg:block">
+          <div class="font-semibold">Mening profilim</div>
+          <div class="text-[var(--muted)] text-xs">ID: 4829103</div>
+        </div>
       </div>
     </div>
   </div>
@@ -75,200 +72,225 @@
 
 <main class="max-w-[1400px] mx-auto px-6 py-6 grid grid-cols-12 gap-6">
 
-  <!-- Sidebar -->
-  <aside class="col-span-2 card p-3 h-fit sticky top-6">
+  <aside class="col-span-12 md:col-span-3 lg:col-span-2 card p-3 h-fit sticky top-24">
     <nav class="flex flex-col gap-1">
-      <a class="nav-item active"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21H3z"/></svg>Bosh sahifa</a>
-      <a class="nav-item"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Barcha mahsulotlar</a>
-      <a class="nav-item justify-between"><span class="flex items-center gap-3"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7 12 3 4 7l8 4 8-4Z"/><path d="M4 7v10l8 4 8-4V7"/></svg>Aksessuarlar</span><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a>
-      <a class="nav-item"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>Telefon uchun</a>
-      <a class="nav-item"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8"/></svg>Kompyuter uchun</a>
-      <a class="nav-item justify-between"><span class="flex items-center gap-3"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 14a8 8 0 1 1 16 0v4a2 2 0 0 1-2 2h-2v-6h4M4 14v4a2 2 0 0 0 2 2h2v-6H4"/></svg>Audio</span><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a>
-      <a class="nav-item"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="3"/><path d="M9 8h6"/></svg>Smart qurilmalar</a>
-      <a class="nav-item"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 7a5 5 0 0 1 0 10l-2 2-4-4 6-6z"/><path d="M7 17a5 5 0 0 1 0-10l2-2 4 4-6 6z"/></svg>Kabel va adapterlar</a>
-      <a class="nav-item"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9z"/></svg>Qurilmalar</a>
-      <a class="nav-item"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 2 3 7l9 5 9-5-9-5Z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5"/></svg>Brendlar</a>
-      <a class="nav-item justify-between"><span class="flex items-center gap-3"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>Aksiyalar</span><span class="badge">Yangi</span></a>
-      <a class="nav-item"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.9.4-1 1.2-1 1.7M12 17h.01"/></svg>Yordam markazi</a>
-      <a class="nav-item"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Biz haqimizda</a>
+      <a class="nav-item active">Bosh sahifa</a>
+      <a class="nav-item">Aksessuarlar</a>
+      <a class="nav-item">Kabel va adapterlar</a>
+      <a class="nav-item">Smart qurilmalar</a>
     </nav>
-    <div class="mt-4 p-3 rounded-xl bg-[var(--chip)] flex items-center gap-3">
-      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-      <div class="flex-1 text-sm font-medium">Tungi rejim</div>
-      <div class="w-10 h-6 rounded-full bg-white border border-[var(--line)] relative"><div class="w-5 h-5 bg-[var(--ink)] rounded-full absolute top-0.5 left-0.5"></div></div>
+    <div class="mt-4 p-3 rounded-xl bg-[var(--chip)] flex items-center justify-between cursor-pointer" onclick="toggleDarkMode()">
+      <div class="text-sm font-medium">Tungi rejim</div>
+      <div class="w-10 h-6 rounded-full bg-[var(--card)] border border-[var(--line)] relative transition-all">
+        <div id="dark-mode-dot" class="w-4 h-4 bg-[var(--ink)] rounded-full absolute top-0.5 left-1 transition-all"></div>
+      </div>
     </div>
   </aside>
 
-  <!-- Center -->
-  <section class="col-span-7 flex flex-col gap-6">
-    <!-- Hero -->
-    <div class="hero p-10 grid grid-cols-2 gap-6 items-center">
+  <section class="col-span-12 md:col-span-9 lg:col-span-7 flex flex-col gap-6">
+    <div class="hero p-8 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
       <div>
-        <div class="text-sm font-semibold text-[var(--muted)] mb-3">iMarket</div>
-        <h1 class="text-5xl font-extrabold leading-tight tracking-tight">Sifatli aksessuarlar<br/>bitta joyda.</h1>
-        <p class="text-[var(--muted)] mt-4 max-w-md">Original mahsulotlar, tez yetkazib berish va eng yaxshi narxlar.</p>
-        <button class="btn-dark mt-6 px-6 py-3 inline-flex items-center gap-2 font-medium">Xaridni boshlash <span>→</span></button>
-        <div class="flex gap-2 mt-6"><span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <div class="text-sm font-semibold text-[var(--muted)] mb-2">iMarket Official</div>
+        <h1 class="text-4xl font-extrabold leading-tight tracking-tight text-[var(--ink)]">Sifatli aksessuarlar bitta joyda.</h1>
+        <p class="text-[var(--muted)] mt-2 text-sm">Original mahsulotlar, tez yetkazib berish va rasmiy kafolat.</p>
       </div>
-      <div class="grid place-items-center">
-        <div class="w-64 h-64 rounded-full bg-white/60 grid place-items-center text-8xl">📱</div>
-      </div>
+      <div class="hidden md:grid place-items-center text-8xl select-none">📱</div>
     </div>
 
-    <!-- Categories -->
     <div>
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-bold">Kategoriyalar</h2>
-        <a class="text-sm text-[var(--muted)] hover:text-black">Barchasini ko'rish →</a>
-      </div>
-      <div class="grid grid-cols-7 gap-3">
-        <div class="cat-tile flex-col gap-2"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/></svg><span class="text-xs">Telefon uchun</span></div>
-        <div class="cat-tile flex-col gap-2"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 14a8 8 0 1 1 16 0v4a2 2 0 0 1-2 2h-2v-6h4M4 14v4a2 2 0 0 0 2 2h2v-6H4"/></svg><span class="text-xs">Audio</span></div>
-        <div class="cat-tile flex-col gap-2"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="3"/></svg><span class="text-xs">Smart qurilmalar</span></div>
-        <div class="cat-tile flex-col gap-2"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 7a5 5 0 0 1 0 10M7 17a5 5 0 0 1 0-10"/></svg><span class="text-xs">Kabel va adapterlar</span></div>
-        <div class="cat-tile flex-col gap-2"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="2"/></svg><span class="text-xs">Kompyuter uchun</span></div>
-        <div class="cat-tile flex-col gap-2"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/></svg><span class="text-xs">Qurilmalar</span></div>
-        <div class="cat-tile flex-col gap-2"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span class="text-xs">Boshqalar</span></div>
+      <h2 class="text-xl font-bold mb-4">Kategoriyalar</h2>
+      <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
+        <div class="cat-tile text-2xl">🎧<span class="text-[10px] font-medium mt-1 block">Audio</span></div>
+        <div class="cat-tile text-2xl">🔌<span class="text-[10px] font-medium mt-1 block">Kabellar</span></div>
+        <div class="cat-tile text-2xl">🔋<span class="text-[10px] font-medium mt-1 block">PowerBank</span></div>
+        <div class="cat-tile text-2xl">⌚<span class="text-[10px] font-medium mt-1 block">SmartWatch</span></div>
+        <div class="cat-tile text-2xl">🛡️<span class="text-[10px] font-medium mt-1 block">G'iloflar</span></div>
+        <div class="cat-tile text-2xl">⚙️<span class="text-[10px] font-medium mt-1 block">Boshqa</span></div>
       </div>
     </div>
 
-    <!-- Popular -->
     <div>
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-bold">Mashhur mahsulotlar</h2>
-        <a class="text-sm text-[var(--muted)] hover:text-black">Barchasini ko'rish →</a>
-      </div>
-      <div class="grid grid-cols-4 gap-4">
-        <!-- Product card template -->
-        <!-- 1 -->
-        <div class="card p-3">
-          <div class="relative aspect-square rounded-xl bg-[var(--chip)] grid place-items-center text-5xl">🎧
-            <button class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white grid place-items-center"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></button>
-          </div>
-          <div class="mt-3 text-sm font-semibold leading-tight">AirPods Pro 2<br/>(USB-C)</div>
-          <div class="mt-1 font-bold">1,890,000 so'm</div>
-          <button class="btn-dark w-full mt-3 py-2 text-xs font-medium inline-flex items-center justify-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 6h15l-2 10H8L6 4H3"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg> Savatchaga</button>
+      <h2 class="text-xl font-bold mb-4">Mashhur mahsulotlar</h2>
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         </div>
-        <!-- 2 -->
-        <div class="card p-3">
-          <div class="relative aspect-square rounded-xl bg-[var(--chip)] grid place-items-center text-5xl">🔌
-            <button class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white grid place-items-center"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></button>
-          </div>
-          <div class="mt-3 text-sm font-semibold leading-tight">Baseus Cafule<br/>Type-C Cable</div>
-          <div class="mt-1 font-bold">120,000 so'm</div>
-          <button class="btn-dark w-full mt-3 py-2 text-xs font-medium inline-flex items-center justify-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 6h15l-2 10H8L6 4H3"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg> Savatchaga</button>
-        </div>
-        <!-- 3 -->
-        <div class="card p-3">
-          <div class="relative aspect-square rounded-xl bg-[var(--chip)] grid place-items-center text-5xl">🔋
-            <button class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white grid place-items-center"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></button>
-          </div>
-          <div class="mt-3 text-sm font-semibold leading-tight">Xiaomi Power Bank<br/>10000mAh</div>
-          <div class="mt-1 font-bold">260,000 so'm</div>
-          <button class="btn-dark w-full mt-3 py-2 text-xs font-medium inline-flex items-center justify-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 6h15l-2 10H8L6 4H3"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg> Savatchaga</button>
-        </div>
-        <!-- 4 -->
-        <div class="card p-3">
-          <div class="relative aspect-square rounded-xl bg-[var(--chip)] grid place-items-center text-5xl">📱
-            <button class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white grid place-items-center"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></button>
-          </div>
-          <div class="mt-3 text-sm font-semibold leading-tight">iPhone 15 Pro Case<br/>Silicone</div>
-          <div class="mt-1 font-bold">150,000 so'm</div>
-          <button class="btn-dark w-full mt-3 py-2 text-xs font-medium inline-flex items-center justify-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 6h15l-2 10H8L6 4H3"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg> Savatchaga</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Promos -->
-    <div class="grid grid-cols-2 gap-4">
-      <div class="promo p-6 flex items-center justify-between">
-        <div>
-          <div class="text-xs flex items-center gap-2 mb-2">⚡ Aksiyalar va chegirmalar</div>
-          <div class="text-2xl font-bold leading-tight">Eng zo'r takliflarni<br/>boy bermang!</div>
-          <button class="mt-4 bg-white text-black px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2">Ko'rish →</button>
-        </div>
-        <div class="text-7xl font-black opacity-80">%</div>
-      </div>
-      <div class="promo light p-6 flex items-center justify-between">
-        <div>
-          <div class="text-xs mb-2">Yangi mahsulotlar</div>
-          <div class="text-2xl font-bold leading-tight">Eng so'nggi texnologiyalar<br/>va aksessuarlar</div>
-          <button class="btn-dark mt-4 px-4 py-2 text-sm inline-flex items-center gap-2">Ko'rish →</button>
-        </div>
-        <div class="text-6xl">⌚</div>
-      </div>
     </div>
   </section>
 
-  <!-- Cart -->
-  <aside class="col-span-3 card p-5 h-fit sticky top-6">
+  <aside class="col-span-12 lg:col-span-3 card p-5 h-fit sticky top-24">
     <div class="flex items-center justify-between mb-4">
-      <div class="flex items-center gap-2 font-semibold">Savatcha <span class="badge">4</span></div>
-      <button class="text-[var(--muted)] hover:text-red-500"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M6 6l1 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-14"/></svg></button>
+      <div class="flex items-center gap-2 font-bold">Savatcha <span id="cart-count" class="badge">0</span></div>
+      <button onclick="clearCart()" class="text-xs text-red-500 hover:underline">Tozalash</button>
     </div>
-    <div class="flex flex-col gap-4 max-h-[420px] overflow-auto pr-1">
-      <!-- item -->
-      <div class="flex gap-3">
-        <div class="w-16 h-16 rounded-xl bg-[var(--chip)] grid place-items-center text-2xl shrink-0">🎧</div>
-        <div class="flex-1">
-          <div class="flex justify-between text-sm font-semibold">AirPods Pro 2 <button class="text-[var(--muted)]">✕</button></div>
-          <div class="text-xs text-[var(--muted)]">(USB-C)</div>
-          <div class="flex justify-between items-center mt-2">
-            <div class="font-bold text-sm">1,890,000 so'm</div>
-            <div class="qty text-sm"><button>−</button>1<button>+</button></div>
-          </div>
-        </div>
+
+    <div class="mb-4 bg-[var(--chip)] p-3 rounded-xl text-xs">
+      <div id="delivery-status" class="mb-1 font-medium text-gray-500">Bepul yetkazib berish uchun yana harid qiling</div>
+      <div class="w-full bg-[var(--line)] h-1.5 rounded-full overflow-hidden">
+        <div id="delivery-progress" class="bg-green-500 h-full transition-all w-0"></div>
       </div>
-      <div class="flex gap-3">
-        <div class="w-16 h-16 rounded-xl bg-[var(--chip)] grid place-items-center text-2xl shrink-0">🔌</div>
-        <div class="flex-1">
-          <div class="flex justify-between text-sm font-semibold">Baseus Cafule <button class="text-[var(--muted)]">✕</button></div>
-          <div class="text-xs text-[var(--muted)]">Type-C Cable</div>
-          <div class="flex justify-between items-center mt-2">
-            <div class="font-bold text-sm">120,000 so'm</div>
-            <div class="qty text-sm"><button>−</button>1<button>+</button></div>
-          </div>
-        </div>
-      </div>
-      <div class="flex gap-3">
-        <div class="w-16 h-16 rounded-xl bg-[var(--chip)] grid place-items-center text-2xl shrink-0">🔋</div>
-        <div class="flex-1">
-          <div class="flex justify-between text-sm font-semibold">Xiaomi Power Bank <button class="text-[var(--muted)]">✕</button></div>
-          <div class="text-xs text-[var(--muted)]">10000mAh</div>
-          <div class="flex justify-between items-center mt-2">
-            <div class="font-bold text-sm">260,000 so'm</div>
-            <div class="qty text-sm"><button>−</button>1<button>+</button></div>
-          </div>
-        </div>
-      </div>
-      <div class="flex gap-3">
-        <div class="w-16 h-16 rounded-xl bg-[var(--chip)] grid place-items-center text-2xl shrink-0">📱</div>
-        <div class="flex-1">
-          <div class="flex justify-between text-sm font-semibold">iPhone 15 Pro Case <button class="text-[var(--muted)]">✕</button></div>
-          <div class="text-xs text-[var(--muted)]">Silicone</div>
-          <div class="flex justify-between items-center mt-2">
-            <div class="font-bold text-sm">150,000 so'm</div>
-            <div class="qty text-sm"><button>−</button>1<button>+</button></div>
-          </div>
-        </div>
-      </div>
+    </div>
+
+    <div id="cart-items" class="flex flex-col gap-4 max-h-[300px] overflow-auto pr-1">
+      <div class="text-center py-6 text-[var(--muted)] text-sm">Savatchangiz hozircha bo'sh</div>
     </div>
 
     <div class="border-t border-[var(--line)] mt-5 pt-4">
-      <div class="flex justify-between items-center">
-        <div class="text-[var(--muted)]">Jami:</div>
-        <div class="text-xl font-extrabold">2,420,000 so'm</div>
+      <div class="flex justify-between items-center mb-4">
+        <div class="text-[var(--muted)] text-sm">Jami summa:</div>
+        <div id="cart-total" class="text-xl font-extrabold">0 so'm</div>
       </div>
-      <button class="btn-dark w-full mt-4 py-3 font-semibold inline-flex items-center justify-center gap-2">BUYURTMA BERISH →</button>
-    </div>
-
-    <div class="mt-5 flex flex-col gap-3 text-sm">
-      <div class="flex items-center gap-3"><div class="w-9 h-9 rounded-xl bg-[var(--chip)] grid place-items-center">🚚</div><div><div class="font-medium">Tez yetkazib berish</div><div class="text-xs text-[var(--muted)]">1-3 kun ichida</div></div></div>
-      <div class="flex items-center gap-3"><div class="w-9 h-9 rounded-xl bg-[var(--chip)] grid place-items-center">✓</div><div><div class="font-medium">100% original mahsulot</div><div class="text-xs text-[var(--muted)]">Sifat kafolati</div></div></div>
-      <div class="flex items-center gap-3"><div class="w-9 h-9 rounded-xl bg-[var(--chip)] grid place-items-center">↺</div><div><div class="font-medium">14 kun ichida qaytarish</div><div class="text-xs text-[var(--muted)]">Qaytarish kafolati</div></div></div>
+      <button onclick="alert('Buyurtmangiz qabul qilindi!')" class="btn-dark w-full py-3 font-semibold text-sm">BUYURTMA BERISH →</button>
     </div>
   </aside>
 </main>
 
+<div id="quick-view-modal" class="modal" onclick="closeModal(event)">
+  <div class="bg-[var(--card)] p-6 rounded-2xl max-w-sm w-full relative border border-[var(--line)] mx-4" onclick="event.stopPropagation()">
+    <button onclick="toggleModal()" class="absolute top-4 right-4 text-xl font-bold">&times;</button>
+    <div id="modal-img" class="w-24 h-24 bg-[var(--chip)] rounded-2xl grid place-items-center text-6xl mx-auto mb-4"></div>
+    <h3 id="modal-title" class="text-xl font-bold text-center mb-1"></h3>
+    <div id="modal-price" class="text-center font-extrabold text-lg text-green-600 mb-3"></div>
+    <p id="modal-desc" class="text-sm text-[var(--muted)] text-center mb-5"></p>
+    <button id="modal-add-btn" class="btn-dark w-full py-2.5 font-medium text-sm">Savatchaga qo'shish</button>
+  </div>
+</div>
+
+<script>
+// 1. Maxsus Mahsulotlar Bazasi
+const PRODUCTS = [
+  { id: 1, name: "AirPods Pro 2 (USB-C)", price: 1890000, emoji: "🎧", desc: "Shovqinni bo'g'uvchi eng so'nggi simsiz quloqchin." },
+  { id: 2, name: "Baseus Cafule Type-C", price: 120000, emoji: "🔌", desc: "Zarblarga chidamli, tezkor zaryadlovchi neylon kabel." },
+  { id: 3, name: "Xiaomi Power Bank 10k", price: 260000, emoji: "🔋", desc: "Yilni va yengil, 22.5W tezkor quvvatlash texnologiyasi." },
+  { id: 4, name: "iPhone 15 Pro Case", price: 150000, emoji: "🛡️", desc: "Magnitli (MagSafe) va yumshoq silikonli himoya g'ilofi." },
+  { id: 5, name: "Smart Watch Series 9", price: 450000, emoji: "⌚", desc: "Yurak urishi va sport rejimlarini kuzatuvchi aqlli soat." }
+];
+
+let cart = [];
+const FREE_DELIVERY_LIMIT = 500000; // 500,000 so'mdan tepasi bepul yetkazish
+
+// 2. Mahsulotlarni ekranga chiqarish
+function renderProducts(items = PRODUCTS) {
+  const grid = document.getElementById('products-grid');
+  grid.innerHTML = items.map(p => `
+    <div class="card p-4 flex flex-col justify-between group">
+      <div class="relative aspect-square rounded-xl bg-[var(--chip)] grid place-items-center text-5xl cursor-pointer" onclick="openModal(${p.id})">
+        ${p.emoji}
+        <span class="absolute bottom-2 left-2 text-[10px] bg-[var(--card)] px-2 py-0.5 rounded-md text-[var(--muted)]">Ko'rish</span>
+      </div>
+      <div class="mt-3">
+        <h3 class="text-sm font-semibold leading-tight">${p.name}</h3>
+        <div class="mt-1 font-bold text-base">${p.price.toLocaleString()} so'm</div>
+      </div>
+      <button onclick="addToCart(${p.id})" class="btn-dark w-full mt-3 py-2 text-xs font-medium flex items-center justify-center gap-2">
+        📥 Savatchaga
+      </button>
+    </div>
+  `).join('');
+}
+
+// 3. Qidiruv tizimi
+function filterProducts() {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const filtered = PRODUCTS.filter(p => p.name.toLowerCase().includes(query));
+  renderProducts(filtered);
+}
+
+// 4. Savatchaga qo'shish va yangilash
+function addToCart(id) {
+  const product = PRODUCTS.find(p => p.id === id);
+  const exist = cart.find(item => item.id === id);
+  if (exist) { exist.qty += 1; } else { cart.push({ ...product, qty: 1 }); }
+  updateCart();
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (item) {
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+  }
+  updateCart();
+}
+
+function clearCart() { cart = []; updateCart(); }
+
+function updateCart() {
+  // Count
+  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+  document.getElementById('cart-count').innerText = count;
+
+  // Items
+  const container = document.getElementById('cart-items');
+  if (cart.length === 0) {
+    container.innerHTML = `<div class="text-center py-6 text-[var(--muted)] text-sm">Savatchangiz hozircha bo'sh</div>`;
+  } else {
+    container.innerHTML = cart.map(item => `
+      <div class="flex gap-3 items-center border-b border-[var(--line)] pb-3">
+        <div class="w-12 h-12 rounded-xl bg-[var(--chip)] grid place-items-center text-2xl shrink-0">${item.emoji}</div>
+        <div class="flex-1 min-w-0">
+          <div class="text-xs font-semibold truncate">${item.name}</div>
+          <div class="text-xs font-bold mt-0.5">${(item.price * item.qty).toLocaleString()} so'm</div>
+        </div>
+        <div class="qty text-xs">
+          <button onclick="changeQty(${item.id}, -1)">−</button>
+          <span>${item.qty}</span>
+          <button onclick="changeQty(${item.id}, 1)">+</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Total Sum
+  const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  document.getElementById('cart-total').innerText = total.toLocaleString() + " so'm";
+
+  // Progress bar logikasi
+  const progress = Math.min((total / FREE_DELIVERY_LIMIT) * 100, 100);
+  document.getElementById('delivery-progress').style.width = `${progress}%`;
+  
+  const statusText = document.getElementById('delivery-status');
+  if (total === 0) {
+    statusText.innerText = "Bepul yetkazib berish uchun yana xarid qiling";
+    statusText.className = "mb-1 font-medium text-gray-500";
+  } else if (total < FREE_DELIVERY_LIMIT) {
+    statusText.innerText = `Yana ${(FREE_DELIVERY_LIMIT - total).toLocaleString()} so'mlik mahsulot qo'shing va bepul yetkazib berishga ega bo'ling!`;
+    statusText.className = "mb-1 font-medium text-amber-500";
+  } else {
+    statusText.innerText = "Sizga bepul yetkazib berish kafolatlandi! 🎉";
+    statusText.className = "mb-1 font-medium text-green-500";
+  }
+}
+
+// 5. Tezkor ko'rish moduli (Modal)
+function openModal(id) {
+  const p = PRODUCTS.find(prod => prod.id === id);
+  document.getElementById('modal-img').innerText = p.emoji;
+  document.getElementById('modal-title').innerText = p.name;
+  document.getElementById('modal-price').innerText = p.price.toLocaleString() + " so'm";
+  document.getElementById('modal-desc').innerText = p.desc;
+  document.getElementById('modal-add-btn').onclick = function() { addToCart(p.id); toggleModal(); };
+  toggleModal();
+}
+
+function toggleModal() {
+  document.getElementById('quick-view-modal').classList.toggle('active');
+}
+function closeModal(e) {
+  if(e.target.id === 'quick-view-modal') toggleModal();
+}
+
+// 6. Tungi rejim (Dark Mode)
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const dot = document.getElementById('dark-mode-dot');
+  if(document.body.classList.contains('dark-mode')) {
+    dot.style.left = '20px';
+  } else {
+    dot.style.left = '4px';
+  }
+}
+
+// Ilk yuklanish
+renderProducts();
+</script>
 </body>
 </html>
