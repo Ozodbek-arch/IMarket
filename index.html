@@ -1,131 +1,213 @@
+import asyncio
+import logging
+import json
+from aiogram import Bot, Dispatcher, F
+from aiogram.types import Message, WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.filters import CommandStart
+from aiohttp import web
+
+# ————————————————————————————————————————————————————————————————
+# 1. SOZLAMALAR (TOKEN va PORT)
+# ————————————————————————————————————————————————————————————————
+BOT_TOKEN = "7345678901:AA-O'Z_TOKENINGIZNI_QO'YING"
+
+# Mahalliy tarmoq IP manzili (Kompyuter va telefon bitta Wi-Fi'da bo'lsa, telefonda ham ochiladi)
+HOST = "0.0.0.0"
+PORT = 8080
+
+# Telegram Web App mahalliy serverga bog'lanishi uchun Ngrok yoki lokal URL
+# AGAR NGROK ISHLATSANGIZ, HAVOLANI SHU YERGA QO'YING. Bo'lmasa sinash uchun turaveradi.
+WEBAPP_URL = f"https://localhost:{PORT}" 
+
+# ————————————————————————————————————————————————————————————————
+# 2. FRONTEND (PREMIUM HTML/CSS/JS INTERFEYS)
+# ————————————————————————————————————————————————————————————————
+HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IMarket — Sifatli aksessuarlar bitta joyda</title>
-    <!-- Tailwind CSS dynamic styling -->
+    <title>iMarket — Premium Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Telegram Web App API -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        tgBg: 'var(--tg-theme-bg-color, #ffffff)',
-                        tgText: 'var(--tg-theme-text-color, #222222)',
-                    }
-                }
-            }
+            darkMode: 'class'
         }
     </script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
 
-    <!-- Header -->
-    <header class="sticky top-0 bg-white dark:bg-gray-800 shadow-sm z-50 px-4 py-3 flex justify-between items-center">
-        <h1 class="text-xl font-bold tracking-wider text-black dark:text-white">iMarket</h1>
-        <button id="theme-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-gray-700">
-            🌙 / ☀️
-        </button>
+    <!-- Navbar -->
+    <header class="sticky top-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-sm z-50 px-4 py-3 flex justify-between items-center border-b border-gray-100 dark:border-gray-700">
+        <h1 class="text-xl font-bold tracking-tight text-black dark:text-white">iMarket</h1>
+        <button id="theme-toggle" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-lg">🌓</button>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-md mx-auto p-4 space-y-6 pb-24">
-        
+    <main class="max-w-md mx-auto p-4 space-y-6 pb-28">
         <!-- Banner -->
-        <div class="bg-black text-white p-6 rounded-2xl flex items-center justify-between shadow-xl">
-            <div class="space-y-2">
-                <span class="text-xs text-gray-400 uppercase tracking-widest">Yangi kolleksiya</span>
-                <h2 class="text-lg font-bold leading-tight">Sifatli aksessuarlar<br>bitta joyda.</h2>
-                <button class="bg-white text-black text-xs font-semibold px-4 py-2 rounded-full mt-2 hover:bg-gray-200 transition">Ko'rish →</button>
+        <div class="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-5 rounded-2xl flex items-center justify-between shadow-lg">
+            <div class="space-y-1">
+                <span class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Yangi Kolleksiya</span>
+                <h2 class="text-base font-bold leading-tight">Sifatli aksessuarlar<br>bitta joyda.</h2>
+                <button class="bg-white text-black text-[11px] font-bold px-3 py-1.5 rounded-full mt-2">Ko'rish →</button>
             </div>
-            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" alt="Headphones" class="w-24 h-24 object-cover rounded-xl shadow-lg">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150" class="w-20 h-20 object-cover rounded-xl shadow-md">
         </div>
 
         <!-- Kategoriyalar -->
         <div>
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="font-bold text-lg">Kategoriyalar</h3>
-                <span class="text-xs text-gray-500 cursor-pointer">Barchasi ></span>
-            </div>
-            <div class="grid grid-cols-4 gap-2 text-center text-xs">
-                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm cursor-pointer border border-gray-100 dark:border-gray-700">📱<p class="mt-1">Telefon</p></div>
-                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm cursor-pointer border border-gray-100 dark:border-gray-700">🎧<p class="mt-1">Audio</p></div>
-                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm cursor-pointer border border-gray-100 dark:border-gray-700">⌚<p class="mt-1">Smart</p></div>
-                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm cursor-pointer border border-gray-100 dark:border-gray-700">💻<p class="mt-1">Kompuyter</p></div>
+            <h3 class="font-bold text-sm text-gray-500 uppercase tracking-wider mb-2">Kategoriyalar</h3>
+            <div class="grid grid-cols-4 gap-2 text-center text-xs font-medium">
+                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 cursor-pointer">📱<p class="mt-1 text-[11px]">Telefon</p></div>
+                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 cursor-pointer">🎧<p class="mt-1 text-[11px]">Audio</p></div>
+                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 cursor-pointer">⌚<p class="mt-1 text-[11px]">Smart</p></div>
+                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 cursor-pointer">💻<p class="mt-1 text-[11px]">Kompuyter</p></div>
             </div>
         </div>
 
-        <!-- Mashhur Mahsulotlar -->
+        <!-- Mahsulotlar -->
         <div>
-            <h3 class="font-bold text-lg mb-3">Mashhur mahsulotlar</h3>
-            <div class="grid grid-cols-2 gap-4">
-                
-                <!-- Product 1 -->
+            <h3 class="font-bold text-sm text-gray-500 uppercase tracking-wider mb-3">Mashhur Mahsulotlar</h3>
+            <div class="grid grid-cols-2 gap-3">
+                <!-- Maxsulot 1 -->
                 <div class="bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
-                    <img src="https://images.unsplash.com/photo-1588449668338-d1346b31a4ee?w=200" class="w-full h-32 object-cover rounded-xl mb-2">
-                    <h4 class="font-semibold text-sm">AirPods Pro 2</h4>
+                    <img src="https://images.unsplash.com/photo-1588449668338-d1346b31a4ee?w=200" class="w-full h-28 object-cover rounded-xl mb-2">
+                    <h4 class="font-bold text-xs">AirPods Pro 2</h4>
                     <p class="text-amber-500 text-xs font-bold my-1">1,890,000 so'm</p>
-                    <button onclick="addToCart('AirPods Pro 2', 1890000)" class="w-full bg-black dark:bg-white dark:text-black text-white text-xs py-2 rounded-xl font-medium mt-1">+ Savatchaga</button>
+                    <button onclick="addToCart('AirPods Pro 2', 1890000)" class="w-full bg-black dark:bg-white dark:text-black text-white text-[11px] py-2 rounded-xl font-bold mt-1 active:scale-95 transition">+ Savatchaga</button>
                 </div>
-
-                <!-- Product 2 -->
+                <!-- Maxsulot 2 -->
                 <div class="bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
-                    <img src="https://images.unsplash.com/photo-1622445262465-2481c4574875?w=200" class="w-full h-32 object-cover rounded-xl mb-2">
-                    <h4 class="font-semibold text-sm">iPhone 15 Pro Case</h4>
+                    <img src="https://images.unsplash.com/photo-1622445262465-2481c4574875?w=200" class="w-full h-28 object-cover rounded-xl mb-2">
+                    <h4 class="font-bold text-xs">iPhone 15 Pro Case</h4>
                     <p class="text-amber-500 text-xs font-bold my-1">150,000 so'm</p>
-                    <button onclick="addToCart('iPhone 15 Pro Case', 150000)" class="w-full bg-black dark:bg-white dark:text-black text-white text-xs py-2 rounded-xl font-medium mt-1">+ Savatchaga</button>
+                    <button onclick="addToCart('iPhone 15 Pro Case', 150000)" class="w-full bg-black dark:bg-white dark:text-black text-white text-[11px] py-2 rounded-xl font-bold mt-1 active:scale-95 transition">+ Savatchaga</button>
                 </div>
-
             </div>
         </div>
     </main>
 
-    <!-- Savatcha Bottom Bar (Telegram MainButton o'rniga yoki unga qo'shimcha) -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 max-w-md mx-auto flex justify-between items-center z-50">
+    <!-- Savatcha qismi -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 max-w-md mx-auto flex justify-between items-center shadow-2xl z-50">
         <div>
-            <p class="text-xs text-gray-400">Jami summa:</p>
-            <p id="total-price" class="font-bold text-lg text-amber-500">0 so'm</p>
+            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Jami Summa:</p>
+            <p id="total-price" class="font-extrabold text-lg text-amber-500">0 so'm</p>
         </div>
-        <button onclick="sendOrder()" class="bg-black dark:bg-white dark:text-black text-white px-6 py-3 rounded-xl font-bold text-sm tracking-wide">Buyurtma berish →</button>
+        <button id="order-btn" onclick="sendOrder()" class="bg-black dark:bg-white dark:text-black text-white px-5 py-3 rounded-xl font-bold text-xs tracking-wide active:scale-95 transition opacity-50 cursor-not-allowed" disabled>
+            BUYURTMA BERISH →
+        </button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Appni to'liq ekranda ochish
+        tg.expand();
+
+        // Telegram ranglar rejimiga moslashish
+        if (tg.colorScheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
 
         let cart = [];
         let total = 0;
 
-        // Dark/Light rejimini almashtirish
-        const toggleBtn = document.getElementById('theme-toggle');
-        toggleBtn.addEventListener('click', () => {
+        document.getElementById('theme-toggle').addEventListener('click', () => {
             document.documentElement.classList.toggle('dark');
         });
 
-        // Savatchaga qo'shish funksiyasi
         function addToCart(name, price) {
             cart.push({ name: name, price: price });
             total += price;
             document.getElementById('total-price').innerText = total.toLocaleString() + " so'm";
-            tg.HapticFeedback.impactOccurred('medium'); // Vibratsiya berish
+            
+            const orderBtn = document.getElementById('order-btn');
+            orderBtn.disabled = false;
+            orderBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('light');
+            }
         }
 
-        // Buyurtmani Botga sendData orqali yuborish
         function sendOrder() {
-            if (cart.length === 0) {
-                alert("Savatchangiz bo'sh!");
-                return;
-            }
+            if (cart.length === 0) return;
+            
             const orderData = {
                 items: cart,
                 total_price: total
             };
-            tg.sendData(JSON.stringify(orderData)); // Botga ma'lumot jo'natish
+            
+            tg.sendData(JSON.stringify(orderData));
         }
     </script>
 </body>
 </html>
+"""
+
+# ————————————————————————————————————————————————————————————————
+# 3. BACKEND (TELEGRAM BOT QISMI)
+# ————————————————————————————————————————————————————————————————
+bot = Bot(token=BOT_TOKEN)
+dp = Dispatcher()
+
+@dp.message(CommandStart())
+async def start_cmd(message: Message):
+    markup = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🛍️ IMarket Do'konini ochish", web_app=WebAppInfo(url=WEBAPP_URL))]
+    ])
+    await message.answer(
+        f"Xush kelibsiz, {message.from_user.first_name}!\n\n"
+        "Siz yuborgan premium dizayndagi do'kon tayyor. Savdo qilish uchun quyidagi tugmani bosing:",
+        reply_markup=markup
+    )
+
+@dp.message(F.web_app_data)
+async def web_app_data_handler(message: Message):
+    try:
+        data = json.loads(message.web_app_data.data)
+        items = data.get("items", [])
+        total_price = data.get("total_price", 0)
+        
+        order_text = "🛍️ **Yangi chek shakllantirildi!**\n\n"
+        for idx, item in enumerate(items, 1):
+            order_text += f"{idx}. {item['name']} — {item['price']:,} so'm\n"
+            
+        order_text += f"\n💰 **Jami summa:** {total_price:,} so'm\n"
+        order_text += f"👤 **Xaridor:** @{message.from_user.username or message.from_user.full_name}"
+        
+        await message.answer(order_text, parse_mode="Markdown")
+    except Exception as e:
+        await message.answer(f"Xatolik yuz berdi: {str(e)}")
+
+# ————————————————————————————————————————————————————————————————
+# 4. WEB SERVER VA ASYNC RUNNER
+# ————————————————————————————————————————————————————————————————
+async def handle_index(request):
+    return web.Response(text=HTML_TEMPLATE, content_type='text/html')
+
+async def main():
+    logging.basicConfig(level=logging.INFO)
+    
+    # Ichki Veb-serverni sozlash (HTML ni ulash uchun)
+    app = web.Application()
+    app.router.add_get('/', handle_index)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, HOST, PORT)
+    
+    # Serverni va Bot pollingni bir vaqtda ishga tushirish
+    await asyncio.gather(
+        site.start(),
+        dp.start_polling(bot)
+    )
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except (KeyboardInterrupt, SystemExit):
+        logging.info("Bot to'xtatildi.")
+        
