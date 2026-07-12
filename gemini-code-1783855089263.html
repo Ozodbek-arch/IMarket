@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMarket — Sifatli aksessuarlar bitta joyda</title>
+    <!-- Tailwind CSS dynamic styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Telegram Web App API -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        tgBg: 'var(--tg-theme-bg-color, #ffffff)',
+                        tgText: 'var(--tg-theme-text-color, #222222)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="sticky top-0 bg-white dark:bg-gray-800 shadow-sm z-50 px-4 py-3 flex justify-between items-center">
+        <h1 class="text-xl font-bold tracking-wider text-black dark:text-white">iMarket</h1>
+        <button id="theme-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-gray-700">
+            🌙 / ☀️
+        </button>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-md mx-auto p-4 space-y-6 pb-24">
+        
+        <!-- Banner -->
+        <div class="bg-black text-white p-6 rounded-2xl flex items-center justify-between shadow-xl">
+            <div class="space-y-2">
+                <span class="text-xs text-gray-400 uppercase tracking-widest">Yangi kolleksiya</span>
+                <h2 class="text-lg font-bold leading-tight">Sifatli aksessuarlar<br>bitta joyda.</h2>
+                <button class="bg-white text-black text-xs font-semibold px-4 py-2 rounded-full mt-2 hover:bg-gray-200 transition">Ko'rish →</button>
+            </div>
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" alt="Headphones" class="w-24 h-24 object-cover rounded-xl shadow-lg">
+        </div>
+
+        <!-- Kategoriyalar -->
+        <div>
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-lg">Kategoriyalar</h3>
+                <span class="text-xs text-gray-500 cursor-pointer">Barchasi ></span>
+            </div>
+            <div class="grid grid-cols-4 gap-2 text-center text-xs">
+                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm cursor-pointer border border-gray-100 dark:border-gray-700">📱<p class="mt-1">Telefon</p></div>
+                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm cursor-pointer border border-gray-100 dark:border-gray-700">🎧<p class="mt-1">Audio</p></div>
+                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm cursor-pointer border border-gray-100 dark:border-gray-700">⌚<p class="mt-1">Smart</p></div>
+                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm cursor-pointer border border-gray-100 dark:border-gray-700">💻<p class="mt-1">Kompuyter</p></div>
+            </div>
+        </div>
+
+        <!-- Mashhur Mahsulotlar -->
+        <div>
+            <h3 class="font-bold text-lg mb-3">Mashhur mahsulotlar</h3>
+            <div class="grid grid-cols-2 gap-4">
+                
+                <!-- Product 1 -->
+                <div class="bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
+                    <img src="https://images.unsplash.com/photo-1588449668338-d1346b31a4ee?w=200" class="w-full h-32 object-cover rounded-xl mb-2">
+                    <h4 class="font-semibold text-sm">AirPods Pro 2</h4>
+                    <p class="text-amber-500 text-xs font-bold my-1">1,890,000 so'm</p>
+                    <button onclick="addToCart('AirPods Pro 2', 1890000)" class="w-full bg-black dark:bg-white dark:text-black text-white text-xs py-2 rounded-xl font-medium mt-1">+ Savatchaga</button>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
+                    <img src="https://images.unsplash.com/photo-1622445262465-2481c4574875?w=200" class="w-full h-32 object-cover rounded-xl mb-2">
+                    <h4 class="font-semibold text-sm">iPhone 15 Pro Case</h4>
+                    <p class="text-amber-500 text-xs font-bold my-1">150,000 so'm</p>
+                    <button onclick="addToCart('iPhone 15 Pro Case', 150000)" class="w-full bg-black dark:bg-white dark:text-black text-white text-xs py-2 rounded-xl font-medium mt-1">+ Savatchaga</button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Savatcha Bottom Bar (Telegram MainButton o'rniga yoki unga qo'shimcha) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-700 max-w-md mx-auto flex justify-between items-center z-50">
+        <div>
+            <p class="text-xs text-gray-400">Jami summa:</p>
+            <p id="total-price" class="font-bold text-lg text-amber-500">0 so'm</p>
+        </div>
+        <button onclick="sendOrder()" class="bg-black dark:bg-white dark:text-black text-white px-6 py-3 rounded-xl font-bold text-sm tracking-wide">Buyurtma berish →</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Appni to'liq ekranda ochish
+
+        let cart = [];
+        let total = 0;
+
+        // Dark/Light rejimini almashtirish
+        const toggleBtn = document.getElementById('theme-toggle');
+        toggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Savatchaga qo'shish funksiyasi
+        function addToCart(name, price) {
+            cart.push({ name: name, price: price });
+            total += price;
+            document.getElementById('total-price').innerText = total.toLocaleString() + " so'm";
+            tg.HapticFeedback.impactOccurred('medium'); // Vibratsiya berish
+        }
+
+        // Buyurtmani Botga sendData orqali yuborish
+        function sendOrder() {
+            if (cart.length === 0) {
+                alert("Savatchangiz bo'sh!");
+                return;
+            }
+            const orderData = {
+                items: cart,
+                total_price: total
+            };
+            tg.sendData(JSON.stringify(orderData)); // Botga ma'lumot jo'natish
+        }
+    </script>
+</body>
+</html>
