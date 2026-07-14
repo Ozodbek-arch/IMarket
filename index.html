@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IMarket — Elektronika megastore</title>
+  <title>iMagazin — Elektronika megastore</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -323,12 +323,12 @@ function renderHeader() {
   const wl = state.wishlist.length;
   return `
     <header class="sticky top-0 z-50 bg-white dark:bg-zinc-950 border-b border-gray-100 dark:border-zinc-800">
-      <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white text-xs py-2 px-4 border-b border-amber-500/20">
+      <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs py-2 px-4">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
-          <span class="flex items-center gap-1.5 text-amber-400 font-medium">${ic('zap')} Toshkent bo'ylab yetkazish bepul — 1 kunda yetkazamiz</span>
+          <span class="flex items-center gap-1.5">${ic('zap')} Toshkent bo'ylab yetkazish bepul — 1 kunda yetkazamiz</span>
           <div class="hidden sm:flex items-center gap-4">
             <span>Yordam: +998 71 200 00 00</span>
-            <span class="text-slate-700">|</span>
+            <span class="text-blue-200">|</span>
             <span>Til: O'zbekcha</span>
           </div>
         </div>
@@ -336,16 +336,16 @@ function renderHeader() {
       <div class="max-w-7xl mx-auto px-4 py-3.5">
         <div class="flex items-center gap-3 sm:gap-5">
           <button onclick="state.sidebarOpen=true; render()" class="lg:hidden p-2 -ml-2 text-gray-700 dark:text-gray-300">${ic('menu')}</button>
-          <button onclick="navigate('home')" class="flex items-center gap-2.5 shrink-0 group">
-            <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-indigo-950 via-slate-900 to-slate-800 flex items-center justify-center text-amber-400 font-black text-xl border-2 border-amber-400/80 shadow-md transition-transform group-hover:scale-105">iM</div>
+          <button onclick="navigate('home')" class="flex items-center gap-2 shrink-0">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-600/20">iM</div>
             <div class="hidden sm:block text-left">
-              <div class="text-xl font-black text-slate-900 dark:text-white leading-tight tracking-wider">IMarket</div>
-              <div class="text-[9px] font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest leading-none mt-0.5">Premium store</div>
+              <div class="text-lg font-bold text-gray-900 dark:text-white leading-tight">iMagazin</div>
+              <div class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight">Elektronika megastore</div>
             </div>
           </button>
           <form onsubmit="event.preventDefault(); state.searchQuery=document.getElementById('search-input').value; state.category='all'; navigate('category')" class="flex-1 max-w-2xl relative">
             <input id="search-input" type="text" value="${state.searchQuery}" placeholder="Qidirish: AirPods, kabel, power bank..."
-              class="w-full h-11 pl-11 pr-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/10 transition-all" />
+              class="w-full h-11 pl-11 pr-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all" />
             <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">${ic('search')}</span>
           </form>
           <div class="flex items-center gap-1 sm:gap-2 shrink-0">
@@ -355,10 +355,10 @@ function renderHeader() {
               ${wl > 0 ? `<span class="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">${wl}</span>` : ''}
             </button>
             <button onclick="navigate('profile')" class="hidden sm:flex w-10 h-10 rounded-xl hover:bg-gray-100 dark:hover:bg-zinc-800 items-center justify-center text-gray-700 dark:text-gray-300 transition-colors">${ic('user')}</button>
-            <button onclick="navigate('cart')" class="relative flex items-center gap-2 h-10 px-3 sm:px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 border border-amber-400/30 transition-colors">
+            <button onclick="navigate('cart')" class="relative flex items-center gap-2 h-10 px-3 sm:px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-colors">
               ${ic('cart')}
-              <span class="hidden sm:block text-sm font-semibold">Savat</span>
-              ${cc > 0 ? `<span class="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-amber-400 text-slate-950 text-[10px] font-bold flex items-center justify-center">${cc}</span>` : ''}
+              <span class="hidden sm:block text-sm font-medium">Savat</span>
+              ${cc > 0 ? `<span class="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-amber-400 text-blue-900 text-[10px] font-bold flex items-center justify-center">${cc}</span>` : ''}
             </button>
           </div>
         </div>
@@ -388,7 +388,7 @@ function renderSidebar() {
           <div class="space-y-1">
             ${navItems.map(item => `
               <button onclick="navigate('${item.page}', ${item.category ? `{category:'${item.category}'}` : `{}`})"
-                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${state.page===item.page ? 'bg-amber-500/10 text-amber-500 dark:text-amber-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-900'}">
+                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${state.page===item.page ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-900'}">
                 ${ic(item.icon)} ${item.label}
               </button>
             `).join('')}
@@ -399,7 +399,7 @@ function renderSidebar() {
           <div class="space-y-1">
             ${categories.map(cat => `
               <button onclick="navigate('category', {category:'${cat.id}'})"
-                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${state.category===cat.id ? 'bg-amber-500/10 text-amber-500 dark:text-amber-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-900'}">
+                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${state.category===cat.id ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-900'}">
                 ${ic(cat.icon)} ${cat.name}
               </button>
             `).join('')}
@@ -431,7 +431,7 @@ function renderMobileNav() {
           const active = state.page === item.page;
           return `
             <button onclick="navigate('${item.page}', ${item.category ? `{category:'${item.category}'}` : `{}`})"
-              class="relative flex flex-col items-center gap-0.5 px-3 py-1.5 transition-colors ${active ? 'text-amber-500 dark:text-amber-400' : 'text-gray-400'}">
+              class="relative flex flex-col items-center gap-0.5 px-3 py-1.5 transition-colors ${active ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'}">
               ${ic(item.icon)}
               <span class="text-[10px] font-medium">${item.label}</span>
               ${item.badge && item.badge > 0 ? `<span class="absolute top-0 right-1 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center">${item.badge}</span>` : ''}
@@ -463,8 +463,8 @@ function productCard(p) {
   return `
     <div class="product-card group relative bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-gray-200 dark:hover:border-zinc-700">
       <div class="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-        ${p.badge ? `<span class="px-2.5 py-1 text-[11px] font-semibold rounded-lg text-white ${p.badge==='Aksiya'?'bg-red-500':p.badge==='Yangi'?'bg-emerald-500':'bg-amber-500' || 'bg-slate-900'}">${p.badge}</span>` : ''}
-        ${d > 0 ? `<span class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-amber-500 text-slate-950">-${d}%</span>` : ''}
+        ${p.badge ? `<span class="px-2.5 py-1 text-[11px] font-semibold rounded-lg text-white ${p.badge==='Aksiya'?'bg-red-500':p.badge==='Yangi'?'bg-emerald-500':'bg-amber-500'}">${p.badge}</span>` : ''}
+        ${d > 0 ? `<span class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-blue-500 text-white">-${d}%</span>` : ''}
       </div>
       <button onclick="event.stopPropagation(); toggleWishlist(${p.id})"
         class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all ${wl ? 'bg-red-50 dark:bg-red-900/30 text-red-500' : 'bg-gray-50 dark:bg-zinc-800 text-gray-400 hover:text-red-500'}">
@@ -478,14 +478,14 @@ function productCard(p) {
       </div>
       <div class="p-3.5 space-y-2">
         <div class="flex items-center gap-1 text-amber-400">${ic('star')}<span class="text-xs font-medium text-gray-600 dark:text-gray-400">${p.rating} (${p.reviewCount})</span></div>
-        <h3 class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 cursor-pointer hover:text-amber-500 dark:hover:text-amber-400 transition-colors min-h-[2.5rem]" onclick="navigate('product',{product:products.find(x=>x.id===${p.id})})">${p.name}</h3>
+        <h3 class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors min-h-[2.5rem]" onclick="navigate('product',{product:products.find(x=>x.id===${p.id})})">${p.name}</h3>
         <div class="flex items-end justify-between pt-1">
           <div>
             <div class="text-base font-bold text-gray-900 dark:text-white">${fmt(p.price)}</div>
             ${p.oldPrice ? `<div class="text-xs text-gray-400 line-through">${fmt(p.oldPrice)}</div>` : ''}
           </div>
           <button onclick="event.stopPropagation(); addToCart(products.find(x=>x.id===${p.id}))"
-            class="w-10 h-10 rounded-xl ${added?'bg-emerald-500':'bg-slate-900 hover:bg-slate-800 border border-amber-500/20'} text-white flex items-center justify-center transition-colors active:scale-90">
+            class="w-10 h-10 rounded-xl ${added?'bg-emerald-500':'bg-blue-600 hover:bg-blue-700'} text-white flex items-center justify-center transition-colors active:scale-90">
             ${added ? ic('check') : ic('cart')}
           </button>
         </div>
@@ -501,22 +501,22 @@ function renderHome() {
   const featured = products.slice(0, 10);
   return `
     <div class="space-y-8 pb-8">
-      <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white border border-amber-500/10">
-        <div class="absolute inset-0 opacity-10"><div class="absolute top-10 right-10 w-64 h-64 rounded-full bg-white blur-3xl"></div><div class="absolute bottom-0 left-20 w-48 h-48 rounded-full bg-amber-400 blur-3xl"></div></div>
+      <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white">
+        <div class="absolute inset-0 opacity-10"><div class="absolute top-10 right-10 w-64 h-64 rounded-full bg-white blur-3xl"></div><div class="absolute bottom-0 left-20 w-48 h-48 rounded-full bg-amber-300 blur-3xl"></div></div>
         <div class="relative px-6 sm:px-10 py-10 sm:py-16 max-w-2xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 backdrop-blur text-xs font-semibold text-amber-400 mb-4 border border-amber-400/20">${ic('zap')} Yozgi aksiya — IMarket mahsulotlariga 50% gacha chegirma</div>
-          <h1 class="text-3xl sm:text-5xl font-extrabold leading-tight mb-4 tracking-tight">IMarket — eng yaxshi narxlar makoni</h1>
-          <p class="text-slate-300 text-base sm:text-lg mb-6 max-w-lg">Eng sara smartfon aksessuarlari, audio tizimlar va zamonaviy gadjetlar. Toshkent bo'ylab tezkor va bepul yetkazib berish.</p>
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur text-xs font-medium mb-4">${ic('zap')} Yozgi aksiya — 50% gacha chegirma</div>
+          <h1 class="text-3xl sm:text-5xl font-bold leading-tight mb-4">Elektronikada eng yaxshi narhlar</h1>
+          <p class="text-blue-100 text-base sm:text-lg mb-6 max-w-lg">Telefon uchun aksessuarlar, audio qurilmalar, smart gadjetlar va ko'plab mahsulotlar. Toshkent bo'ylab bepul yetkazib berish.</p>
           <div class="flex flex-wrap gap-3">
-            <button onclick="navigate('category',{category:'all'})" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-400 text-slate-950 font-bold text-sm hover:bg-amber-300 transition-colors active:scale-95">Xarid qilish ${ic('arrow')}</button>
-            <button onclick="navigate('category',{category:'sale'})" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/5 backdrop-blur text-white font-semibold text-sm hover:bg-white/10 transition-colors">Aksiyalar</button>
+            <button onclick="navigate('category',{category:'all'})" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-blue-700 font-semibold text-sm hover:bg-blue-50 transition-colors active:scale-95">Xarid qilish ${ic('arrow')}</button>
+            <button onclick="navigate('category',{category:'sale'})" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 backdrop-blur text-white font-semibold text-sm hover:bg-white/20 transition-colors">Aksiyalar</button>
           </div>
         </div>
       </section>
       <section class="grid grid-cols-2 lg:grid-cols-4 gap-3">
         ${[{icon:'truck',t:'Bepul yetkazish',d:"Toshkent bo'ylab"},{icon:'shield',t:'Rasmiy kafolat',d:'12 oygacha'},{icon:'rotate',t:'14 kun qaytarish',d:'Shubhasiz'},{icon:'headphones2',t:'24/7 yordam',d:'Doimo online'}].map(f=>`
           <div class="flex items-center gap-3 p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800">
-            <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 dark:text-amber-400 shrink-0">${ic(f.icon)}</div>
+            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">${ic(f.icon)}</div>
             <div><div class="text-sm font-semibold text-gray-900 dark:text-white">${f.t}</div><div class="text-xs text-gray-500 dark:text-gray-400">${f.d}</div></div>
           </div>
         `).join('')}
@@ -525,8 +525,8 @@ function renderHome() {
         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Kategoriyalar</h2>
         <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
           ${categories.map(cat=>`
-            <button onclick="navigate('category',{category:'${cat.id}'})" class="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 hover:border-amber-400 dark:hover:border-amber-600 hover:shadow-md transition-all">
-              <div class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500 dark:text-amber-400 group-hover:scale-110 transition-transform">${ic(cat.icon)}</div>
+            <button onclick="navigate('category',{category:'${cat.id}'})" class="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition-all">
+              <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">${ic(cat.icon)}</div>
               <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">${cat.name}</span>
             </button>
           `).join('')}
@@ -535,7 +535,7 @@ function renderHome() {
       ${top.length > 0 ? `
         <section>
           <div class="flex items-center justify-between mb-4"><h2 class="text-xl font-bold text-gray-900 dark:text-white">Top mahsulotlar</h2>
-            <button onclick="navigate('category',{category:'all'})" class="text-sm text-amber-500 dark:text-amber-400 font-medium flex items-center gap-1 hover:gap-2 transition-all">Barchasi ${ic('arrow')}</button>
+            <button onclick="navigate('category',{category:'all'})" class="text-sm text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1 hover:gap-2 transition-all">Barchasi ${ic('arrow')}</button>
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">${top.map(p=>productCard(p)).join('')}</div>
         </section>
@@ -544,15 +544,15 @@ function renderHome() {
         <section class="rounded-3xl bg-gradient-to-r from-amber-400 to-orange-500 p-6 sm:p-8 text-white relative overflow-hidden">
           <div class="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10"></div><div class="absolute -right-4 bottom-0 w-24 h-24 rounded-full bg-white/10"></div>
           <div class="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div><div class="text-xs font-semibold uppercase tracking-wide text-amber-100 mb-1">Aksiya</div><h2 class="text-2xl sm:text-3xl font-bold mb-2">IMarket Maxsus Chegirmalari</h2><p class="text-amber-50 text-sm">Haftaning eng qaynoq takliflarini o'tkazib yubormang</p></div>
-            <button onclick="navigate('category',{category:'sale'})" class="px-5 py-3 rounded-xl bg-slate-950 text-amber-400 font-semibold text-sm hover:bg-slate-900 border border-amber-400/20 transition-colors shrink-0">Aksiyani ko'rish</button>
+            <div><div class="text-xs font-semibold uppercase tracking-wide text-amber-100 mb-1">Aksiya</div><h2 class="text-2xl sm:text-3xl font-bold mb-2">Yozgi ranglar aksiyasi</h2><p class="text-amber-50 text-sm">Chegirma bilan mahsulotlarni hoziroq oling</p></div>
+            <button onclick="navigate('category',{category:'sale'})" class="px-5 py-3 rounded-xl bg-white text-orange-600 font-semibold text-sm hover:bg-orange-50 transition-colors shrink-0">Aksiyani ko'rish</button>
           </div>
         </section>
       ` : ''}
       ${nw.length > 0 ? `
         <section>
           <div class="flex items-center justify-between mb-4"><h2 class="text-xl font-bold text-gray-900 dark:text-white">Yangi mahsulotlar</h2>
-            <button onclick="navigate('category',{category:'all'})" class="text-sm text-amber-500 dark:text-amber-400 font-medium flex items-center gap-1 hover:gap-2 transition-all">Barchasi ${ic('arrow')}</button>
+            <button onclick="navigate('category',{category:'all'})" class="text-sm text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1 hover:gap-2 transition-all">Barchasi ${ic('arrow')}</button>
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">${nw.map(p=>productCard(p)).join('')}</div>
         </section>
@@ -589,15 +589,15 @@ function renderCategory() {
       <div>
         <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Kategoriyalar</h3>
         <div class="space-y-1">
-          <button onclick="navigate('category',{category:'all'})" class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cat==='all'?'bg-amber-500/10 text-amber-500 dark:text-amber-400 font-medium':'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-900'}">Barcha mahsulotlar</button>
+          <button onclick="navigate('category',{category:'all'})" class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cat==='all'?'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium':'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-900'}">Barcha mahsulotlar</button>
           ${categories.map(c=>`
-            <button onclick="navigate('category',{category:'${c.id}'})" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${cat===c.id?'bg-amber-500/10 text-amber-500 dark:text-amber-400 font-medium':'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-900'}">${ic(c.icon)} ${c.name}</button>
+            <button onclick="navigate('category',{category:'${c.id}'})" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${cat===c.id?'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium':'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-900'}">${ic(c.icon)} ${c.name}</button>
           `).join('')}
         </div>
       </div>
       <div>
         <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Narx oralig'i</h3>
-        <input type="range" min="0" max="5000000" step="50000" value="${state.priceRange}" oninput="state.priceRange=+this.value; document.getElementById('price-val').textContent=new Intl.NumberFormat('uz-UZ').format(state.priceRange)+' so\'m'; render()" class="w-full accent-amber-500" />
+        <input type="range" min="0" max="5000000" step="50000" value="${state.priceRange}" oninput="state.priceRange=+this.value; document.getElementById('price-val').textContent=new Intl.NumberFormat('uz-UZ').format(state.priceRange)+' so\'m'; render()" class="w-full accent-blue-600" />
         <div class="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 mt-2"><span>0 so'm</span><span id="price-val">${new Intl.NumberFormat('uz-UZ').format(state.priceRange)} so'm</span></div>
       </div>
     </div>
@@ -606,13 +606,13 @@ function renderCategory() {
   return `
     <div class="pb-8">
       <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
-        <button onclick="navigate('home')" class="hover:text-amber-500">Bosh sahifa</button><span>/</span>
+        <button onclick="navigate('home')" class="hover:text-blue-600">Bosh sahifa</button><span>/</span>
         <span class="text-gray-900 dark:text-white font-medium">${catName}</span>
       </div>
       <div class="flex items-center justify-between mb-5">
         <div><h1 class="text-2xl font-bold text-gray-900 dark:text-white">${catName}</h1><p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">${filtered.length} ta mahsulot topildi</p></div>
         <div class="flex items-center gap-2">
-          <select onchange="state.sort=this.value; render()" class="appearance-none h-10 pl-4 pr-9 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:border-amber-500">
+          <select onchange="state.sort=this.value; render()" class="appearance-none h-10 pl-4 pr-9 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:border-blue-500">
             <option value="popular" ${state.sort==='popular'?'selected':''}>Mashhur</option>
             <option value="price-asc" ${state.sort==='price-asc'?'selected':''}>Arzon boshlab</option>
             <option value="price-desc" ${state.sort==='price-desc'?'selected':''}>Qimmat boshlab</option>
@@ -640,7 +640,7 @@ function renderCategory() {
           <div class="absolute bottom-0 left-0 right-0 max-h-[80vh] bg-white dark:bg-zinc-950 rounded-t-3xl p-5 overflow-y-auto">
             <div class="flex items-center justify-between mb-4"><h2 class="text-lg font-bold text-gray-900 dark:text-white">Filtrlash</h2><button onclick="state.filterOpen=false; render()" class="p-2 text-gray-500">${ic('close')}</button></div>
             ${filterPanel}
-            <button onclick="state.filterOpen=false; render()" class="w-full mt-6 h-12 rounded-xl bg-slate-900 text-amber-400 font-semibold text-sm border border-amber-500/20">Ko'rsatish (${filtered.length})</button>
+            <button onclick="state.filterOpen=false; render()" class="w-full mt-6 h-12 rounded-xl bg-blue-600 text-white font-semibold text-sm">Ko'rsatish (${filtered.length})</button>
           </div>
         </div>
       ` : ''}
@@ -650,26 +650,26 @@ function renderCategory() {
 
 function renderProductDetail() {
   const p = state.product;
-  if (!p) return `<div class="flex flex-col items-center justify-center py-20"><p class="text-gray-500 dark:text-gray-400 mb-4">Mahsulot topilmadi</p><button onclick="navigate('home')" class="px-5 py-2.5 rounded-xl bg-slate-900 border border-amber-500/20 text-amber-400 text-sm font-medium">Bosh sahifaga qaytish</button></div>`;
+  if (!p) return `<div class="flex flex-col items-center justify-center py-20"><p class="text-gray-500 dark:text-gray-400 mb-4">Mahsulot topilmadi</p><button onclick="navigate('home')" class="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-medium">Bosh sahifaga qaytish</button></div>`;
   const images = (p.images && p.images.length > 0) ? p.images : [p.image];
   const d = discount(p.price, p.oldPrice);
   const related = products.filter(x => x.category === p.category && x.id !== p.id).slice(0, 5);
   return `
     <div class="pb-8 space-y-8">
       <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-        <button onclick="navigate('home')" class="hover:text-amber-500">Bosh sahifa</button><span>/</span>
-        <button onclick="navigate('category',{category:'${p.category}'})" class="hover:text-amber-500">${categories.find(c=>c.id===p.category)?.name||p.category}</button><span>/</span>
+        <button onclick="navigate('home')" class="hover:text-blue-600">Bosh sahifa</button><span>/</span>
+        <button onclick="navigate('category',{category:'${p.category}'})" class="hover:text-blue-600">${categories.find(c=>c.id===p.category)?.name||p.category}</button><span>/</span>
         <span class="text-gray-900 dark:text-white font-medium truncate">${p.name}</span>
       </div>
-      <button onclick="navigate('category',{category:'${p.category}'})" class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-amber-500 dark:hover:text-amber-400">${ic('chevronLeft')} Orqaga</button>
+      <button onclick="navigate('category',{category:'${p.category}'})" class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">${ic('chevronLeft')} Orqaga</button>
       <div class="grid lg:grid-cols-2 gap-6 lg:gap-10">
         <div class="space-y-3">
           <div class="relative aspect-square rounded-2xl overflow-hidden bg-gray-50 dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800">
             ${p.badge ? `<span class="absolute top-4 left-4 z-10 px-3 py-1.5 text-xs font-semibold rounded-lg text-white ${p.badge==='Aksiya'?'bg-red-500':p.badge==='Yangi'?'bg-emerald-500':'bg-amber-500'}">${p.badge}</span>` : ''}
-            ${d > 0 ? `<span class="absolute top-4 right-4 z-10 px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-500 text-slate-950">-${d}%</span>` : ''}
+            ${d > 0 ? `<span class="absolute top-4 right-4 z-10 px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-500 text-white">-${d}%</span>` : ''}
             <img id="main-img" src="${images[0]}" alt="${p.name}" class="w-full h-full object-cover" />
           </div>
-          ${images.length > 1 ? `<div class="flex gap-2">${images.map((img,i)=>`<button onclick="document.getElementById('main-img').src='${img}'" class="w-20 h-20 rounded-xl overflow-hidden border-2 border-gray-200 dark:border-zinc-800 hover:border-amber-500 transition-colors"><img src="${img}" class="w-full h-full object-cover" /></button>`).join('')}</div>` : ''}
+          ${images.length > 1 ? `<div class="flex gap-2">${images.map((img,i)=>`<button onclick="document.getElementById('main-img').src='${img}'" class="w-20 h-20 rounded-xl overflow-hidden border-2 border-gray-200 dark:border-zinc-800 hover:border-blue-600 transition-colors"><img src="${img}" class="w-full h-full object-cover" /></button>`).join('')}</div>` : ''}
         </div>
         <div class="space-y-5">
           <div>
@@ -687,7 +687,7 @@ function renderProductDetail() {
           </div>
           ${p.colors && p.colors.length > 0 ? `
             <div><h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">Rang:</h3>
-              <div class="flex gap-2">${p.colors.map((c,i)=>`<button onclick="this.parentElement.querySelectorAll('button').forEach(b=>{b.className='w-10 h-10 rounded-full border-2 border-gray-200 dark:border-zinc-700'}); this.className='w-10 h-10 rounded-full border-2 border-amber-500 ring-2 ring-amber-500/20 scale-110'" class="w-10 h-10 rounded-full border-2 ${i===0?'border-amber-500 ring-2 ring-amber-500/20 scale-110':'border-gray-200 dark:border-zinc-700'}" style="background:${c}"></button>`).join('')}</div>
+              <div class="flex gap-2">${p.colors.map((c,i)=>`<button onclick="this.parentElement.querySelectorAll('button').forEach(b=>{b.className='w-10 h-10 rounded-full border-2 border-gray-200 dark:border-zinc-700'}); this.className='w-10 h-10 rounded-full border-2 border-blue-600 ring-2 ring-blue-500/20 scale-110'" class="w-10 h-10 rounded-full border-2 ${i===0?'border-blue-600 ring-2 ring-blue-500/20 scale-110':'border-gray-200 dark:border-zinc-700'}" style="background:${c}"></button>`).join('')}</div>
             </div>
           ` : ''}
           <div class="flex items-center gap-3 pt-2">
@@ -696,12 +696,12 @@ function renderProductDetail() {
               <span id="qty" class="w-12 text-center font-semibold text-gray-900 dark:text-white">1</span>
               <button onclick="var el=document.getElementById('qty'); var v=+el.textContent+1; el.textContent=v" class="w-11 h-12 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800">${ic('plus')}</button>
             </div>
-            <button onclick="var q=+document.getElementById('qty').textContent; for(var i=0;i<q;i++) addToCart(products.find(x=>x.id===${p.id}))" class="flex-1 h-12 rounded-xl bg-slate-900 border border-amber-500/20 hover:bg-slate-800 text-amber-400 font-semibold text-sm flex items-center justify-center gap-2 transition-all active:scale-95">${ic('cart')} Savatga qo'shish</button>
+            <button onclick="var q=+document.getElementById('qty').textContent; for(var i=0;i<q;i++) addToCart(products.find(x=>x.id===${p.id}))" class="flex-1 h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm flex items-center justify-center gap-2 transition-all active:scale-95">${ic('cart')} Savatga qo'shish</button>
             <button onclick="toggleWishlist(${p.id})" class="w-12 h-12 rounded-xl border flex items-center justify-center transition-colors ${state.wishlist.includes(p.id)?'border-red-200 bg-red-50 dark:bg-red-900/20 text-red-500':'border-gray-200 dark:border-zinc-700 text-gray-400 hover:text-red-500'}">${state.wishlist.includes(p.id)?ic('heartFill'):ic('heart')}</button>
           </div>
-          <button onclick="var q=+document.getElementById('qty').textContent; for(var i=0;i<q;i++) addToCart(products.find(x=>x.id===${p.id})); navigate('checkout')" class="w-full h-12 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold text-sm transition-colors active:scale-95">Hoziroq sotib olish</button>
+          <button onclick="var q=+document.getElementById('qty').textContent; for(var i=0;i<q;i++) addToCart(products.find(x=>x.id===${p.id})); navigate('checkout')" class="w-full h-12 rounded-xl bg-amber-400 hover:bg-amber-500 text-amber-900 font-semibold text-sm transition-colors active:scale-95">Hoziroq sotib olish</button>
           <div class="grid grid-cols-3 gap-3 pt-4 border-t border-gray-100 dark:border-zinc-800">
-            ${[{icon:'truck',l:'Bepul yetkazish'},{icon:'shield',l:'Rasmiy kafolat'},{icon:'rotate',l:'14 kun qaytarish'}].map(f=>`<div class="flex flex-col items-center gap-1.5 text-center"><span class="text-amber-500">${ic(f.icon)}</span><span class="text-xs text-gray-600 dark:text-gray-400">${f.l}</span></div>`).join('')}
+            ${[{icon:'truck',l:'Bepul yetkazish'},{icon:'shield',l:'Rasmiy kafolat'},{icon:'rotate',l:'14 kun qaytarish'}].map(f=>`<div class="flex flex-col items-center gap-1.5 text-center"><span class="text-blue-600 dark:text-blue-400">${ic(f.icon)}</span><span class="text-xs text-gray-600 dark:text-gray-400">${f.l}</span></div>`).join('')}
           </div>
         </div>
       </div>
@@ -720,7 +720,7 @@ function renderCart() {
       <div class="w-24 h-24 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center mb-5 text-gray-300 dark:text-gray-600">${ic('bag')}</div>
       <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Savat bo'sh</h2>
       <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Hozircha savatga hech narsa qo'shilmagan</p>
-      <button onclick="navigate('category',{category:'all'})" class="px-6 py-3 rounded-xl bg-slate-900 border border-amber-500/20 text-amber-400 text-sm font-semibold flex items-center gap-2 transition-colors">Xarid qilish ${ic('arrow')}</button>
+      <button onclick="navigate('category',{category:'all'})" class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold flex items-center gap-2 transition-colors">Xarid qilish ${ic('arrow')}</button>
     </div>`;
   }
   const ct = cartTotal();
@@ -736,7 +736,7 @@ function renderCart() {
               <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-gray-50 dark:bg-zinc-800 shrink-0 cursor-pointer" onclick="navigate('product',{product:products.find(x=>x.id===${item.product.id})})"><img src="${item.product.image}" class="w-full h-full object-cover" /></div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-start justify-between gap-2">
-                  <h3 class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 cursor-pointer hover:text-amber-500" onclick="navigate('product',{product:products.find(x=>x.id===${item.product.id})})">${item.product.name}</h3>
+                  <h3 class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 cursor-pointer hover:text-blue-600" onclick="navigate('product',{product:products.find(x=>x.id===${item.product.id})})">${item.product.name}</h3>
                   <button onclick="removeFromCart(${item.product.id})" class="text-gray-400 hover:text-red-500 transition-colors shrink-0">${ic('trash')}</button>
                 </div>
                 ${item.color ? `<div class="flex items-center gap-1.5 mt-1.5"><span class="text-xs text-gray-500 dark:text-gray-400">Rang:</span><span class="w-4 h-4 rounded-full border border-gray-200 dark:border-zinc-700" style="background:${item.color}"></span></div>` : ''}
@@ -751,20 +751,20 @@ function renderCart() {
               </div>
             </div>
           `).join('')}
-          <button onclick="navigate('category',{category:'all'})" class="text-sm text-amber-500 font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all pt-2">${ic('arrow')} Xaridni davom ettirish</button>
+          <button onclick="navigate('category',{category:'all'})" class="text-sm text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all pt-2">${ic('arrow')} Xaridni davom ettirish</button>
         </div>
         <div class="lg:col-span-1"><div class="sticky top-[130px] space-y-4">
           <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-5 space-y-4">
             <h2 class="text-lg font-bold text-gray-900 dark:text-white">Buyurtma xulosasi</h2>
-            <div class="flex items-center gap-2 p-3 rounded-xl bg-gray-50 dark:bg-zinc-800">${ic('tag')}<input type="text" placeholder="Promokod" class="flex-1 bg-transparent text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none" /><button class="text-sm font-medium text-amber-500">Qo'llash</button></div>
+            <div class="flex items-center gap-2 p-3 rounded-xl bg-gray-50 dark:bg-zinc-800">${ic('tag')}<input type="text" placeholder="Promokod" class="flex-1 bg-transparent text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none" /><button class="text-sm font-medium text-blue-600 dark:text-blue-400">Qo'llash</button></div>
             <div class="space-y-2.5 text-sm">
               <div class="flex items-center justify-between"><span class="text-gray-600 dark:text-gray-400">Mahsulotlar (${state.cart.length})</span><span class="font-medium text-gray-900 dark:text-white">${fmt(ct)}</span></div>
               <div class="flex items-center justify-between"><span class="text-gray-600 dark:text-gray-400 flex items-center gap-1.5">${ic('truck')} Yetkazib berish</span><span class="font-medium ${ship===0?'text-emerald-600 dark:text-emerald-400':'text-gray-900 dark:text-white'}">${ship===0?'Bepul':fmt(ship)}</span></div>
-              ${ship > 0 ? `<p class="text-xs text-amber-500 bg-amber-500/10 rounded-lg p-2.5">${fmt(1000000-ct)} dan ortiq xarid qilsangiz, yetkazib berish bepul bo'ladi</p>` : ''}
+              ${ship > 0 ? `<p class="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-2.5">${fmt(1000000-ct)} dan ortiq xarid qilsangiz, yetkazib berish bepul bo'ladi</p>` : ''}
             </div>
             <div class="pt-4 border-t border-gray-100 dark:border-zinc-800 space-y-3">
               <div class="flex items-center justify-between"><span class="text-base font-semibold text-gray-900 dark:text-white">Jami</span><span class="text-xl font-bold text-gray-900 dark:text-white">${fmt(total)}</span></div>
-              <button onclick="navigate('checkout')" class="w-full h-12 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 border border-amber-500/20 font-semibold text-sm flex items-center justify-center gap-2 transition-colors active:scale-95">Buyurtma berish ${ic('arrow')}</button>
+              <button onclick="navigate('checkout')" class="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors active:scale-95">Buyurtma berish ${ic('arrow')}</button>
             </div>
           </div>
         </div></div>
@@ -775,7 +775,7 @@ function renderCart() {
 
 function renderCheckout() {
   if (state.cart.length === 0 && state.checkoutStep !== 'success') {
-    return `<div class="flex flex-col items-center justify-center py-20 text-center"><p class="text-gray-500 dark:text-gray-400 mb-4">Savat bo'sh</p><button onclick="navigate('home')" class="px-5 py-2.5 rounded-xl bg-slate-900 border border-amber-500/20 text-amber-400 text-sm font-medium">Bosh sahifaga qaytish</button></div>`;
+    return `<div class="flex flex-col items-center justify-center py-20 text-center"><p class="text-gray-500 dark:text-gray-400 mb-4">Savat bo'sh</p><button onclick="navigate('home')" class="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-medium">Bosh sahifaga qaytish</button></div>`;
   }
   if (state.checkoutStep === 'success') {
     return `<div class="flex flex-col items-center justify-center py-16 text-center max-w-md mx-auto">
@@ -783,23 +783,23 @@ function renderCheckout() {
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Buyurtma qabul qilindi!</h1>
       <p class="text-gray-600 dark:text-gray-400 mb-1">Buyurtmangiz raqami: <span class="font-semibold text-gray-900 dark:text-white">#IM-2026-1288</span></p>
       <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Tez orada operator siz bilan bog'lanadi va buyurtmani tasdiqlaydi</p>
-      <div class="flex gap-3"><button onclick="navigate('home')" class="px-5 py-3 rounded-xl bg-slate-900 text-amber-400 border border-amber-500/20 text-sm font-semibold">Bosh sahifaga qaytish</button><button onclick="navigate('orders')" class="px-5 py-3 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-gray-700 dark:text-gray-300 text-sm font-semibold">Buyurtmalarim</button></div>
+      <div class="flex gap-3"><button onclick="navigate('home')" class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold">Bosh sahifaga qaytish</button><button onclick="navigate('orders')" class="px-5 py-3 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-gray-700 dark:text-gray-300 text-sm font-semibold">Buyurtmalarim</button></div>
     </div>`;
   }
 
   const ct = cartTotal();
   const ship = ct >= 1000000 ? 0 : 25000;
   const total = ct + ship;
-  const inputCls = "w-full h-12 pl-11 pr-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/10 transition-all";
+  const inputCls = "w-full h-12 pl-11 pr-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all";
 
   return `
     <div class="pb-8">
-      <button onclick="${state.checkoutStep==='payment'?"state.checkoutStep='info'; render()":"navigate('cart')"}" class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-amber-500 mb-4">${ic('chevronLeft')} Orqaga</button>
+      <button onclick="${state.checkoutStep==='payment'?"state.checkoutStep='info'; render()":"navigate('cart')"}" class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 mb-4">${ic('chevronLeft')} Orqaga</button>
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Buyurtma rasmiylashtirish</h1>
       <div class="flex items-center gap-2 mb-6">
-        <div class="flex items-center gap-2 ${state.checkoutStep==='info'?'text-amber-500 dark:text-amber-400':'text-gray-400'}"><div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${state.checkoutStep==='info'?'bg-amber-500 text-slate-950':'bg-gray-200 dark:bg-zinc-800 text-gray-500'}">1</div><span class="text-sm font-medium">Ma'lumot</span></div>
+        <div class="flex items-center gap-2 ${state.checkoutStep==='info'?'text-blue-600 dark:text-blue-400':'text-gray-400'}"><div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${state.checkoutStep==='info'?'bg-blue-600 text-white':'bg-gray-200 dark:bg-zinc-800 text-gray-500'}">1</div><span class="text-sm font-medium">Ma'lumot</span></div>
         <div class="flex-1 h-0.5 bg-gray-200 dark:bg-zinc-800"></div>
-        <div class="flex items-center gap-2 ${state.checkoutStep==='payment'?'text-amber-500 dark:text-amber-400':'text-gray-400'}"><div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${state.checkoutStep==='payment'?'bg-amber-500 text-slate-950':'bg-gray-200 dark:bg-zinc-800 text-gray-500'}">2</div><span class="text-sm font-medium">To'lov</span></div>
+        <div class="flex items-center gap-2 ${state.checkoutStep==='payment'?'text-blue-600 dark:text-blue-400':'text-gray-400'}"><div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${state.checkoutStep==='payment'?'bg-blue-600 text-white':'bg-gray-200 dark:bg-zinc-800 text-gray-500'}">2</div><span class="text-sm font-medium">To'lov</span></div>
       </div>
       <form onsubmit="event.preventDefault(); ${state.checkoutStep==='info'?"state.checkoutStep='payment'; render()":"state.checkoutStep='success'; state.cart=[]; saveState(); render()"}" class="grid lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2 space-y-4">
@@ -812,21 +812,21 @@ function renderCheckout() {
               </div>
               <div class="relative">${ic('pin')}<input required type="text" placeholder="Manzil (ko'cha, uy, kvartira)" class="${inputCls}" /></div>
               <div class="relative">${ic('truck')}<select class="${inputCls} cursor-pointer"><option>Toshkent</option><option>Samarqand</option><option>Buxoro</option><option>Andijon</option><option>Farg'ona</option></select></div>
-              <textarea placeholder="Qo'shimcha izoh (ixtiyoriy)" rows="3" class="w-full p-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-amber-500 resize-none"></textarea>
+              <textarea placeholder="Qo'shimcha izoh (ixtiyoriy)" rows="3" class="w-full p-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 resize-none"></textarea>
             </div>
           ` : `
             <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-5 space-y-3">
               <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-2">To'lov usuli</h2>
               ${[{id:'cash',icon:'banknote',l:'Naqd pul',d:"Yetkazib berishda to'lash"},{id:'card',icon:'creditCard',l:'Karta orqali',d:'Yetkazib berishda terminal orqali'},{id:'online',icon:'wallet',l:"Online to'lov",d:'Click / Payme orqali'}].map(m=>`
-                <button type="button" onclick="state.paymentMethod='${m.id}'; render()" class="w-full flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left ${state.paymentMethod===m.id?'border-amber-500 bg-amber-500/10':'border-gray-200 dark:border-zinc-800 hover:border-gray-300'}">
-                  <span class="${state.paymentMethod===m.id?'text-amber-500 dark:text-amber-400':'text-gray-400'}">${ic(m.icon)}</span>
+                <button type="button" onclick="state.paymentMethod='${m.id}'; render()" class="w-full flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left ${state.paymentMethod===m.id?'border-blue-600 bg-blue-50 dark:bg-blue-900/20':'border-gray-200 dark:border-zinc-800 hover:border-gray-300'}">
+                  <span class="${state.paymentMethod===m.id?'text-blue-600 dark:text-blue-400':'text-gray-400'}">${ic(m.icon)}</span>
                   <div class="flex-1"><div class="text-sm font-semibold text-gray-900 dark:text-white">${m.l}</div><div class="text-xs text-gray-500 dark:text-gray-400">${m.d}</div></div>
-                  <div class="w-5 h-5 rounded-full border-2 ${state.paymentMethod===m.id?'border-amber-500 bg-amber-500':'border-gray-300'}">${state.paymentMethod===m.id?'<span class="text-slate-950">'+ic('check')+'</span>':''}</div>
+                  <div class="w-5 h-5 rounded-full border-2 ${state.paymentMethod===m.id?'border-blue-600 bg-blue-600':'border-gray-300'}">${state.paymentMethod===m.id?'<span class="text-white">'+ic('check')+'</span>':''}</div>
                 </button>
               `).join('')}
             </div>
           `}
-          <button type="submit" class="w-full h-12 rounded-xl bg-slate-900 border border-amber-500/20 hover:bg-slate-800 text-amber-400 font-semibold text-sm transition-colors active:scale-95">${state.checkoutStep==='info'?"Davom etish":"Buyurtmani tasdiqlash"}</button>
+          <button type="submit" class="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors active:scale-95">${state.checkoutStep==='info'?"Davom etish":"Buyurtmani tasdiqlash"}</button>
         </div>
         <div class="lg:col-span-1"><div class="sticky top-[130px] bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-5 space-y-4">
           <h2 class="text-lg font-bold text-gray-900 dark:text-white">Buyurtmangiz</h2>
@@ -856,17 +856,17 @@ function renderProfile() {
   return `
     <div class="pb-8 space-y-6">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Profil</h1>
-      <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 border border-amber-500/15 rounded-3xl p-6 text-white relative overflow-hidden">
-        <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/5"></div>
+      <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-6 text-white relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/10"></div>
         <div class="relative flex items-center gap-4">
-          <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur border border-amber-500/30 flex items-center justify-center text-amber-400 text-2xl font-bold">AK</div>
-          <div class="flex-1"><h2 class="text-xl font-bold">Aziz Karimov</h2><p class="text-slate-300 text-sm">+998 90 123 45 67</p><p class="text-slate-400 text-xs mt-0.5">aziz.karimov@gmail.com</p></div>
-          <button class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-sm font-medium transition-colors text-amber-400">Tahrirlash</button>
+          <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center text-2xl font-bold">AK</div>
+          <div class="flex-1"><h2 class="text-xl font-bold">Aziz Karimov</h2><p class="text-blue-100 text-sm">+998 90 123 45 67</p><p class="text-blue-200 text-xs mt-0.5">aziz.karimov@gmail.com</p></div>
+          <button class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-medium transition-colors">Tahrirlash</button>
         </div>
       </div>
       <div class="grid grid-cols-3 gap-3">
         ${stats.map(s=>`<div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-4 text-center">
-          <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 dark:text-amber-400 mx-auto mb-2">${ic(s.i)}</div>
+          <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 mx-auto mb-2">${ic(s.i)}</div>
           <div class="text-xl font-bold text-gray-900 dark:text-white">${s.v}</div><div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">${s.l}</div>
         </div>`).join('')}
       </div>
@@ -889,8 +889,8 @@ function renderProfile() {
 
 function renderOrders() {
   const statusCfg = {
-    'Yetkazilmoqda': {c:'text-amber-500 dark:text-amber-400',b:'bg-amber-500/10',i:'truck'},
-    'Yetkazildi': {c:'text-blue-500 dark:text-blue-400',b:'bg-blue-500/10',i:'clock'},
+    'Yetkazilmoqda': {c:'text-blue-600 dark:text-blue-400',b:'bg-blue-50 dark:bg-blue-900/20',i:'truck'},
+    'Yetkazildi': {c:'text-amber-600 dark:text-amber-400',b:'bg-amber-50 dark:bg-amber-900/20',i:'clock'},
     'Qabul qilindi': {c:'text-emerald-600 dark:text-emerald-400',b:'bg-emerald-50 dark:bg-emerald-900/20',i:'check'},
     'Bekor qilindi': {c:'text-red-600 dark:text-red-400',b:'bg-red-50 dark:bg-red-900/20',i:'xCircle'},
   };
@@ -902,7 +902,7 @@ function renderOrders() {
           <div class="w-20 h-20 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center mb-4 text-gray-300 dark:text-gray-600">${ic('package')}</div>
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Buyurtmalar yo'q</h2>
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-5">Hali buyurtma bermagansiz</p>
-          <button onclick="navigate('category',{category:'all'})" class="px-5 py-3 rounded-xl bg-slate-900 text-amber-400 border border-amber-500/20 text-sm font-semibold">Xarid qilish</button>
+          <button onclick="navigate('category',{category:'all'})" class="px-5 py-3 rounded-xl bg-blue-600 text-white text-sm font-semibold">Xarid qilish</button>
         </div>
       ` : `
         <div class="space-y-4">
@@ -921,7 +921,7 @@ function renderOrders() {
               </div>
               <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-zinc-800/50 border-t border-gray-100 dark:border-zinc-800">
                 <div><div class="text-xs text-gray-500 dark:text-gray-400">Jami</div><div class="text-base font-bold text-gray-900 dark:text-white">${fmt(o.total)}</div></div>
-                <button class="flex items-center gap-1 text-sm text-amber-500 dark:text-amber-400 font-medium hover:gap-2 transition-all">Batafsil ${ic('chevronRight')}</button>
+                <button class="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 font-medium hover:gap-2 transition-all">Batafsil ${ic('chevronRight')}</button>
               </div>
             </div>
           `;}).join('')}
