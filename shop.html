@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="uz" class="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iMagazin — Elektronika megastore</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 9999px; }
+    .dark ::-webkit-scrollbar-thumb { background: #3f3f46; }
+    .line-clamp-1 { display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
+    .line-clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    [x-cloak] { display: none !important; }
+    .animate-fade { animation: fade 0.3s ease-out; }
+    @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-bounce-once { animation: bounceOnce 0.6s ease-out; }
+    @keyframes bounceOnce { 0%,100%{transform:scale(1)} 30%{transform:scale(1.15)} 60%{transform:scale(0.95)} }
+    .product-card:hover .quick-view { opacity: 1; }
+    .product-card:hover .card-img { transform: scale(1.05); }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-zinc-950 transition-colors" id="body">
+
+<div id="app"></div>
+
+<script>
+// ===== DATA =====
+let categories = [
+  { id: 'telefon', name: 'Telefon uchun', icon: 'smartphone' },
+  { id: 'audio', name: 'Audio', icon: 'headphones' },
+  { id: 'smart', name: 'Smart qurilmalar', icon: 'watch' },
+  { id: 'kompyuter', name: 'Kompyuter uchun', icon: 'monitor' },
+  { id: 'kabel', name: 'Kabel va adapterlar', icon: 'cable' },
+  { id: 'qurilmalar', name: 'Qurilmalar', icon: 'cpu' },
+];
+
+let products = [
+  {
+    id: 1, name: 'AirPods Pro 2 (USB-C)', price: 1890000, oldPrice: 2100000,
+    image: 'https://images.pexels.com/photos/3780681/pexels-photo-3780681.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/3780681/pexels-photo-3780681.jpeg?auto=compress&cs=tinysrgb&w=600',
+             'https://images.pexels.com/photos/8534088/pexels-photo-8534088.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'audio', rating: 4.9, reviewCount: 312,
+    description: "Apple AirPods Pro 2 USB-C — eng zamonaviy simsiz quloqchinlar. Faol shovqinni blokirovka qilish, Transparency rejimi va spatial audio. USB-C zaryadlash qo'llab-quvvatlanadi.",
+    colors: ['#ffffff', '#000000'], badge: 'Top', inStock: true,
+  },
+  {
+    id: 2, name: 'Baseus Cafule Type-C Cable', price: 120000,
+    image: 'https://images.pexels.com/photos/4219862/pexels-photo-4219862.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/4219862/pexels-photo-4219862.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'kabel', rating: 4.8, reviewCount: 876,
+    description: "Baseus Cafule Series USB-C kabel. Nylon o'rilgan, 100W tezkor zaryadlash qo'llab-quvvatlanadi. Uzunligi 2m.",
+    colors: ['#000000', '#ff0000', '#0000ff'], inStock: true,
+  },
+  {
+    id: 3, name: 'Xiaomi Power Bank 10000mAh', price: 260000, oldPrice: 320000,
+    image: 'https://images.pexels.com/photos/4526414/pexels-photo-4526414.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/4526414/pexels-photo-4526414.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'telefon', rating: 4.7, reviewCount: 1240,
+    description: "Xiaomi Power Bank 3 10000mAh — yengil va kichik dizayn. 22.5W tezkor zaryadlash, USB-C va USB-A portlar. LED ko'rsatgich.",
+    colors: ['#000000', '#ffffff'], badge: 'Aksiya', inStock: true,
+  },
+  {
+    id: 4, name: 'iPhone 15 Pro Case Silicone', price: 150000,
+    image: 'https://images.pexels.com/photos/7889008/pexels-photo-7889008.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/7889008/pexels-photo-7889008.jpeg?auto=compress&cs=tinysrgb&w=600',
+             'https://images.pexels.com/photos/6999538/pexels-photo-6999538.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'telefon', rating: 4.9, reviewCount: 128,
+    description: "Yumshoq silikon materialdan tayyorlangan premium chexol. Telefoningizni zarb va tirnalishlardan himoya qiladi. Aniq tugma kesimlari.",
+    colors: ['#1a1a1a', '#2c4a7c', '#b87c5a', '#e8d5c4'], badge: 'Yangi', inStock: true,
+  },
+  {
+    id: 5, name: 'Baseus Magnetic Power Bank', price: 260000, oldPrice: 290000,
+    image: 'https://images.pexels.com/photos/5081386/pexels-photo-5081386.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/5081386/pexels-photo-5081386.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'telefon', rating: 4.8, reviewCount: 95,
+    description: "Baseus Magnetic Power Bank 10000mAh MagSafe qo'llab-quvvatlaydi. 15W simsiz zaryadlash, USB-C in/out.",
+    colors: ['#000000', '#ffffff'], inStock: true,
+  },
+  {
+    id: 6, name: 'UGREEN 20W Charger', price: 180000,
+    image: 'https://images.pexels.com/photos/4219863/pexels-photo-4219863.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/4219863/pexels-photo-4219863.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'telefon', rating: 4.9, reviewCount: 432,
+    description: "UGREEN 20W USB-C tezkor zaryadlagich. PD 3.0 protokoli, folding vilka dizayni. iPhone va Android qurilmalar bilan mos.",
+    colors: ['#ffffff', '#000000'], inStock: true,
+  },
+  {
+    id: 7, name: 'USB-C to Lightning Cable', price: 80000,
+    image: 'https://images.pexels.com/photos/4219864/pexels-photo-4219864.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'kabel', rating: 4.8, reviewCount: 567,
+    description: "USB-C to Lightning sertifikatlangan kabel. MFi sertifikati, tez zaryadlash va ma'lumot uzatish. 1m uzunlik.",
+    colors: ['#ffffff', '#000000'], inStock: true,
+  },
+  {
+    id: 8, name: 'Sony WH-1000XM5', price: 3200000, oldPrice: 3800000,
+    image: 'https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'audio', rating: 4.9, reviewCount: 234,
+    description: "Sony WH-1000XM5 eng yaxshi ANC quloqchinlar. 30 soat batareya, multipoint ulanish, 360 Reality Audio.",
+    colors: ['#000000', '#c8b89a'], badge: 'Top', inStock: true,
+  },
+  {
+    id: 9, name: 'Apple Watch Series 9', price: 4500000,
+    image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'smart', rating: 4.9, reviewCount: 189,
+    description: "Apple Watch Series 9 — S9 chip, Double Tap gesti, 18 soat batareya. Sog'liq monitoring va sport funksiyalari.",
+    colors: ['#000000', '#e8d5c4', '#ff6b6b', '#4ecdc4'], badge: 'Yangi', inStock: true,
+  },
+  {
+    id: 10, name: 'Logitech MX Master 3S', price: 890000,
+    image: 'https://images.pexels.com/photos/5082577/pexels-photo-5082577.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/5082577/pexels-photo-5082577.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'kompyuter', rating: 4.8, reviewCount: 445,
+    description: "Logitech MX Master 3S — professional simsiz sichqoncha. 8000 DPI, sustsiz aylantirish, 70 kun batareya.",
+    colors: ['#000000', '#c8b89a'], inStock: true,
+  },
+  {
+    id: 11, name: 'Samsung 25W Super Fast Charger', price: 220000, oldPrice: 280000,
+    image: 'https://images.pexels.com/photos/4526413/pexels-photo-4526413.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/4526413/pexels-photo-4526413.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'telefon', rating: 4.7, reviewCount: 789,
+    description: "Samsung 25W Super Fast Charger 2.0. AFC va PD 3.0 protokollari, USB-C port, kabel bilan birga keladi.",
+    colors: ['#000000', '#ffffff'], badge: 'Aksiya', inStock: true,
+  },
+  {
+    id: 12, name: 'JBL Flip 6 Speaker', price: 1450000,
+    image: 'https://images.pexels.com/photos/1279107/pexels-photo-1279107.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/1279107/pexels-photo-1279107.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'audio', rating: 4.8, reviewCount: 321,
+    description: "JBL Flip 6 portable Bluetooth speaker. IP67 suv o'tkazmaslik, 12 soat batareya, PartyBoost funksiyasi.",
+    colors: ['#000000', '#ff0000', '#0000ff', '#00ff00'], inStock: true,
+  },
+  { id: 13, name: 'Samsung Galaxy Buds2 Pro', price: 2100000, oldPrice: 2450000,
+    image: 'https://images.pexels.com/photos/8534088/pexels-photo-8534088.jpeg?auto=compress&cs=tinysrgb&w=400',
+    images: ['https://images.pexels.com/photos/8534088/pexels-photo-8534088.jpeg?auto=compress&cs=tinysrgb&w=600'],
+    category: 'audio', rating: 4.7, reviewCount: 512,
+    description: "Samsung Galaxy Buds2 Pro — 24bit Hi-Fi ovoz, aqlli ANC va 360 audio. Bir zaryadda 8 soatgacha ishlaydi.",
+    colors: ['#2c2c2c','#c9b8a0','#7b8fb5'], badge: 'Aksiya', inStock: true },
+  { id: 14, name: 'Anker Nano 30W GaN Charger', price: 240000,
+    image: 'https://images.pexels.com/photos/4219530/pexels-photo-4219530.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'telefon', rating: 4.9, reviewCount: 621,
+    description: "Anker Nano 30W GaN — juda kichik, kuchli. iPhone, iPad va MacBook Air uchun ideal tezkor zaryadlagich.",
+    colors: ['#ffffff','#000000'], inStock: true },
+  { id: 15, name: 'MagSafe Wireless Charger 15W', price: 320000, oldPrice: 380000,
+    image: 'https://images.pexels.com/photos/5081389/pexels-photo-5081389.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'telefon', rating: 4.6, reviewCount: 187,
+    description: "15W magnitli simsiz zaryadlagich. iPhone 12 va undan yangi modellar bilan mos, kuchli magnitli birikma.",
+    colors: ['#ffffff'], badge: 'Aksiya', inStock: true },
+  { id: 16, name: 'Xiaomi Redmi Buds 5 Pro', price: 640000,
+    image: 'https://images.pexels.com/photos/3945667/pexels-photo-3945667.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'audio', rating: 4.6, reviewCount: 348,
+    description: "Redmi Buds 5 Pro — 52dB gacha ANC, LDAC qo'llab-quvvatlash, 38 soat batareya kutubxonasi bilan.",
+    colors: ['#111111','#e8e8e8','#4a6bc9'], badge: 'Yangi', inStock: true },
+  { id: 17, name: 'Baseus 65W GaN Charger 3-port', price: 380000, oldPrice: 460000,
+    image: 'https://images.pexels.com/photos/4219654/pexels-photo-4219654.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'telefon', rating: 4.8, reviewCount: 274,
+    description: "3 portli 65W GaN zaryadlagich — laptop, telefon va soatni bir vaqtda zaryad qiladi.",
+    colors: ['#000000','#ffffff'], inStock: true },
+  { id: 18, name: 'HDMI 2.1 Cable 8K 2m', price: 130000,
+    image: 'https://images.pexels.com/photos/163100/circuit-circuit-board-resistor-computer-163100.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'kabel', rating: 4.7, reviewCount: 189,
+    description: "8K@60Hz va 4K@120Hz HDMI 2.1 kabel. Gaming konsol va yangi TVlar uchun.",
+    colors: ['#000000'], inStock: true },
+  { id: 19, name: 'Type-C to HDMI Adapter 4K', price: 190000,
+    image: 'https://images.pexels.com/photos/4219862/pexels-photo-4219862.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'kabel', rating: 4.6, reviewCount: 156,
+    description: "USB-C dan HDMI ga adapter, 4K@60Hz qo'llab-quvvatlaydi. MacBook va telefon uchun.",
+    colors: ['#5a5a5a'], inStock: true },
+  { id: 20, name: 'Xiaomi Mi Band 8', price: 480000,
+    image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'smart', rating: 4.7, reviewCount: 892,
+    description: "Xiaomi Mi Band 8 — 1.62'' AMOLED, 150+ mashq, 16 kun batareya. Sport va salomatlik trekeri.",
+    colors: ['#000000','#f6c1c8','#a3d9b1'], badge: 'Aksiya', inStock: true },
+  { id: 21, name: 'Samsung Galaxy Watch 6', price: 3400000,
+    image: 'https://images.pexels.com/photos/393047/pexels-photo-393047.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'smart', rating: 4.8, reviewCount: 214,
+    description: "Galaxy Watch 6 — Wear OS, ECG, uyqu tahlili va tez zaryadlash.",
+    colors: ['#1e1e1e','#c0c0c0','#d4af7a'], inStock: true },
+  { id: 22, name: 'Xiaomi Smart Bulb E27', price: 95000,
+    image: 'https://images.pexels.com/photos/577514/pexels-photo-577514.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'smart', rating: 4.5, reviewCount: 638,
+    description: "16 million rangli aqlli lampa. Google Home va Alexa bilan ishlaydi.",
+    colors: ['#ffffff'], inStock: true },
+  { id: 23, name: 'Logitech K380 Keyboard', price: 620000,
+    image: 'https://images.pexels.com/photos/1194713/pexels-photo-1194713.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'kompyuter', rating: 4.7, reviewCount: 421,
+    description: "Ko'p qurilmali Bluetooth klaviatura — 3 ta qurilmaga bir vaqtda ulanadi.",
+    colors: ['#2e2e2e','#e8d5c4','#7b8fb5'], inStock: true },
+  { id: 24, name: 'ASUS ROG Gaming Mouse', price: 890000, oldPrice: 1100000,
+    image: 'https://images.pexels.com/photos/2115256/pexels-photo-2115256.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'kompyuter', rating: 4.9, reviewCount: 178,
+    description: "ROG geyming sichqoncha — 26000 DPI, RGB, 6 tugma. E-sport uchun ideal.",
+    colors: ['#000000'], badge: 'Top', inStock: true },
+  { id: 25, name: 'Portable SSD 1TB USB-C', price: 1250000,
+    image: 'https://images.pexels.com/photos/159392/computer-motherboard-computer-motherboard-technology-159392.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'kompyuter', rating: 4.8, reviewCount: 289,
+    description: "1TB portativ SSD — 1050 MB/s tezlik, USB-C 3.2 Gen2. Zarbaga chidamli dizayn.",
+    colors: ['#1a1a1a','#f0f0f0'], badge: 'Yangi', inStock: true },
+  { id: 26, name: 'Anker Soundcore Motion+', price: 1420000,
+    image: 'https://images.pexels.com/photos/1706694/pexels-photo-1706694.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'audio', rating: 4.7, reviewCount: 356,
+    description: "30W Hi-Res portativ Bluetooth kolonka. IPX7 suv o'tkazmaslik, 12 soat ishlash.",
+    colors: ['#000000'], inStock: true },
+  { id: 27, name: 'Kingston 128GB microSD U3', price: 180000,
+    image: 'https://images.pexels.com/photos/163140/technology-computer-motherboard-cpu-163140.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'qurilmalar', rating: 4.8, reviewCount: 723,
+    description: "4K video yozish uchun 128GB microSD karta. 100 MB/s o'qish tezligi.",
+    colors: ['#e63946'], inStock: true },
+  { id: 28, name: 'Wireless Presenter Pointer', price: 210000,
+    image: 'https://images.pexels.com/photos/8636621/pexels-photo-8636621.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'qurilmalar', rating: 4.5, reviewCount: 92,
+    description: "Prezentatsiya uchun simsiz pult — 100m radius, USB qabul qilgich.",
+    colors: ['#000000'], inStock: true },
+  { id: 29, name: 'iPad Pro Magnetic Case', price: 480000,
+    image: 'https://images.pexels.com/photos/1334597/pexels-photo-1334597.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'telefon', rating: 4.7, reviewCount: 143,
+    description: "iPad Pro uchun magnitli chexol. Avtomatik uyqu, ko'p burchakli qo'llab-quvvatlash.",
+    colors: ['#1a1a1a','#2c4a7c','#b87c5a'], inStock: true },
+  { id: 30, name: 'GoPro Hero 12 Black', price: 6800000, oldPrice: 7500000,
+    image: 'https://images.pexels.com/photos/3568520/pexels-photo-3568520.jpeg?auto=compress&cs=tinysrgb&w=400',
+    category: 'qurilmalar', rating: 4.9, reviewCount: 245,
+    description: "GoPro Hero 12 Black — 5.3K60, HyperSmooth 6.0, suvga chidamli 10m gacha.",
+    colors: ['#000000'], badge: 'Top', inStock: true },
+];
+
+const ordersData = [
+  { id: '#IM-2026-1287', date: '24.05.2026', status: 'Yetkazilmoqda', total: 1890000, items: [{ product: products[0], quantity: 1 }] },
+  { id: '#IM-2024-1286', date: '22.05.2024', status: 'Yetkazildi', total: 420000, items: [{ product: products[1], quantity: 1 }, { product: products[6], quantity: 1 }] },
+  { id: '#IM-2024-1285', date: '20.05.2024', status: 'Qabul qilindi', total: 160000, items: [{ product: products[3], quantity: 1 }] },
+];
+
+// ===== STATE =====
+let state = {
+  page: 'home',
+  category: null,
+  product: null,
+  cart: [],
+  wishlist: [],
+  darkMode: false,
+  searchQuery: '',
+  sort: 'popular',
+  priceRange: 5000000,
+  sidebarOpen: false,
+  filterOpen: false,
+  checkoutStep: 'info',
+  paymentMethod: 'cash',
+  addedId: null,
+};
+
+function saveState() {
+  localStorage.setItem('im-cart', JSON.stringify(state.cart));
+  localStorage.setItem('im-wishlist', JSON.stringify(state.wishlist));
+  localStorage.setItem('im-dark', JSON.stringify(state.darkMode));
+  localStorage.setItem('im-products', JSON.stringify(products));
+  localStorage.setItem('im-categories', JSON.stringify(categories));
+}
+
+function loadState() {
+  try {
+    const c = JSON.parse(localStorage.getItem('im-cart') || '[]');
+    const w = JSON.parse(localStorage.getItem('im-wishlist') || '[]');
+    const d = JSON.parse(localStorage.getItem('im-dark') || 'false');
+    state.cart = c; state.wishlist = w; state.darkMode = d;
+    const sp = localStorage.getItem('im-products');
+    const sc = localStorage.getItem('im-categories');
+    if (sp) products = JSON.parse(sp);
+    if (sc) categories = JSON.parse(sc);
+    // rehydrate cart items to reference latest product objects
+    state.cart = state.cart.map(i => {
+      const p = products.find(x => x.id === i.product.id);
+      return p ? { ...i, product: p } : i;
+    }).filter(i => i.product);
+  } catch(e) {}
+}
+
+// ===== ADMIN CRUD =====
+function nextProductId() { return (products.reduce((m,p)=>Math.max(m,p.id),0) || 0) + 1; }
+function saveProduct(form) {
+  const data = {
+    id: form.id ? +form.id : nextProductId(),
+    name: form.name.trim(),
+    price: +form.price || 0,
+    oldPrice: form.oldPrice ? +form.oldPrice : undefined,
+    image: form.image.trim() || 'https://via.placeholder.com/400',
+    images: form.images ? form.images.split(',').map(s=>s.trim()).filter(Boolean) : undefined,
+    category: form.category,
+    rating: +form.rating || 5,
+    reviewCount: +form.reviewCount || 0,
+    description: form.description || '',
+    colors: form.colors ? form.colors.split(',').map(s=>s.trim()).filter(Boolean) : [],
+    badge: form.badge || undefined,
+    inStock: true,
+  };
+  if (!data.images || !data.images.length) data.images = [data.image];
+  const idx = products.findIndex(p => p.id === data.id);
+  if (idx >= 0) products[idx] = data; else products.push(data);
+  saveState();
+}
+function deleteProduct(id) {
+  if (!confirm("Mahsulotni o'chirilsinmi?")) return;
+  products = products.filter(p => p.id !== id);
+  saveState(); render();
+}
+function saveCategory(form) {
+  const id = (form.id || form.name).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  if (!id) return alert('Kategoriya nomini kiriting');
+  const idx = categories.findIndex(c => c.id === id);
+  const data = { id, name: form.name.trim(), icon: form.icon || 'tag' };
+  if (idx >= 0) categories[idx] = data; else categories.push(data);
+  saveState();
+}
+function deleteCategory(id) {
+  if (!confirm("Kategoriya o'chirilsinmi? Undagi mahsulotlar kategoriyasiz qoladi.")) return;
+  categories = categories.filter(c => c.id !== id);
+  saveState(); render();
+}
+function resetAdminData() {
+  if (!confirm("Barcha o'zgarishlar o'chirilsinmi va boshlang'ich holatga qaytarilsinmi?")) return;
+  localStorage.removeItem('im-products');
+  localStorage.removeItem('im-categories');
+  location.reload();
+}
+function handleProductForm(ev) {
+  ev.preventDefault();
+  const fd = new FormData(ev.target);
+  const obj = {};
+  fd.forEach((v,k)=>obj[k]=v);
+  saveProduct(obj);
+  state.editingProductId = null;
+  state.adminTab = 'products';
+  render();
+}
+function handleCategoryForm(ev) {
+  ev.preventDefault();
+  const fd = new FormData(ev.target);
+  const obj = {};
+  fd.forEach((v,k)=>obj[k]=v);
+  saveCategory(obj);
+  state.editingCategoryId = null;
+  render();
+}
+
+// ===== HELPERS =====
+function fmt(p) { return new Intl.NumberFormat('uz-UZ').format(p) + " so'm"; }
+function discount(p, o) { if (!o || o <= p) return 0; return Math.round(((o - p) / o) * 100); }
+function cartTotal() { return state.cart.reduce((s, i) => s + i.product.price * i.quantity, 0); }
+function cartCount() { return state.cart.reduce((s, i) => s + i.quantity, 0); }
+
+function navigate(page, opts = {}) {
+  state.page = page;
+  if (opts.category !== undefined) state.category = opts.category;
+  if (opts.product !== undefined) state.product = opts.product;
+  state.sidebarOpen = false;
+  state.checkoutStep = 'info';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render();
+}
+
+function addToCart(product, color) {
+  const exists = state.cart.find(i => i.product.id === product.id);
+  if (exists) {
+    exists.quantity++;
+  } else {
+    state.cart.push({ product, quantity: 1, color: color || (product.colors && product.colors[0]) });
+  }
+  state.addedId = product.id;
+  saveState();
+  render();
+  setTimeout(() => { state.addedId = null; render(); }, 2000);
+}
+
+function updateQty(id, delta) {
+  const item = state.cart.find(i => i.product.id === id);
+  if (item) {
+    item.quantity += delta;
+    if (item.quantity <= 0) {
+      state.cart = state.cart.filter(i => i.product.id !== id);
+    }
+  }
+  saveState();
+  render();
+}
+
+function removeFromCart(id) {
+  state.cart = state.cart.filter(i => i.product.id !== id);
+  saveState();
+  render();
+}
+
+function toggleWishlist(id) {
+  if (state.wishlist.includes(id)) {
+    state.wishlist = state.wishlist.filter(x => x !== id);
+  } else {
+    state.wishlist.push(id);
+  }
+  saveState();
+  render();
+}
+
+function toggleDark() {
+  state.darkMode = !state.darkMode;
+  saveState();
+  render();
+}
+
+// ===== ICONS =====
+const iconSvg = {
+  smartphone: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>',
+  headphones: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>',
+  watch: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><path d="M12 10v2l1 1M16.5 5.5L16 2H8l-.5 3.5M7.5 18.5L8 22h8l.5-3.5"/></svg>',
+  monitor: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+  cable: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 9a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a2 2 0 0 1-2 2Zm0 0v3a6 6 0 0 0 6 6h3m6-9a2 2 0 0 0 2-2V5a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v2a2 2 0 0 0 2 2Zm0 0v3a6 6 0 0 1-6 6H9"/></svg>',
+  cpu: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg>',
+  search: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>',
+  cart: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>',
+  heart: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>',
+  heartFill: '<svg width="20" height="20" fill="currentColor" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>',
+  moon: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>',
+  sun: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>',
+  user: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  star: '<svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+  zap: '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+  menu: '<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>',
+  close: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  home: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  tag: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>',
+  package: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg>',
+  truck: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2M14 9h4l4 4v4a1 1 0 0 1-1 1h-1"/><circle cx="7.5" cy="18.5" r="2.5"/><circle cx="17.5" cy="18.5" r="2.5"/></svg>',
+  shield: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>',
+  rotate: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>',
+  headphones2: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H4a1 1 0 0 1-1-1zM21 14h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1a1 1 0 0 0 1-1z"/><path d="M3 14a9 9 0 0 1 18 0"/></svg>',
+  arrow: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
+  eye: '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+  minus: '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>',
+  plus: '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+  trash: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  bag: '<svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>',
+  check: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',
+  chevronLeft: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>',
+  chevronRight: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>',
+  chevronDown: '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>',
+  sliders: '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>',
+  pin: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>',
+  phone: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+  creditCard: '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>',
+  wallet: '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V5"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>',
+  banknote: '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>',
+  bell: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
+  settings: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>',
+  logout: '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>',
+  clock: '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+  xCircle: '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>',
+};
+
+function ic(name) { return iconSvg[name] || ''; }
+
+// ===== RENDER =====
+function render() {
+  document.documentElement.classList.toggle('dark', state.darkMode);
+  const app = document.getElementById('app');
+  app.innerHTML = renderLayout();
+  attachEvents();
+  if (window.lucide) lucide.createIcons();
+}
+
+function renderLayout() {
+  return `
+    ${renderHeader()}
+    <div class="flex max-w-7xl mx-auto">
+      ${renderSidebar()}
+      <main class="flex-1 min-w-0 px-4 py-6 pb-24 lg:pb-8 animate-fade">
+        ${renderPage()}
+      </main>
+    </div>
+    ${renderMobileNav()}
+  `;
+}
+
+function renderHeader() {
+  const cc = cartCount();
+  const wl = state.wishlist.length;
+  return `
+    <header class="sticky top-0 z-50 bg-white dark:bg-zinc-950 border-b border-gray-100 dark:border-zinc-800">
+      <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs py-2 px-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+          <span class="flex items-center gap-1.5">${ic('zap')} Toshkent bo'ylab yetkazish bepul — 1 kunda yetkazamiz</span>
+          <div class="hidden sm:flex items-center gap-4">
+            <span>Yordam: +998 71 200 00 00</span>
+            <span class="text-blue-200">|</span>
+            <span>Til: O'zbekcha</span>
+          </div>
+        </div>
+      </div>
+      <div class="max-w-7xl mx-auto px-4 py-3.5">
+        <div class="flex items-center gap-3 sm:gap-5">
+          <button onclick="state.sidebarOpen=true; render()" class="lg:hidden p-2 -ml-2 text-gray-700 dark:text-gray-300">${ic('menu')}</button>
+          <button onclick="navigate('home')" class="flex items-center gap-2 shrink-0">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-600/20">iM</div>
+            <div class="hidden sm:block text-left">
+              <div class="text-lg font-bold text-gray-900 dark:text-white leading-tight">iMagazin</div>
+              <div class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight">Elektronika megastore</div>
+            </div>
+          </button>
+          <form onsubmit="event.preventDefault(); state.searchQuery=document.getElementById('search-input').value; state.category='all'; navigate('category')" class="flex-1 max-w-2xl relative">
+            <input id="search-input" type="text" value="${state.searchQuery}" placeholder="Qidirish: AirPods, kabel, power bank..."
+              class="w-full h-11 pl-11 pr-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all" />
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">${ic('search')}</span>
+          </form>
+          <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+            <button onclick="toggleDark()" class="w-10 h-10 rounded-xl hover:bg-gray-100 dark:hover:bg-zinc-800 flex items-center justify-center text-gray-700 dark:text-gray-300 transition-colors">${state.darkMode ? ic('sun') : ic('moon')}</button>
+            <button onclick="navigate('profile')" class="w-10 h-10 rounded-xl hover:bg-gray-100 dark:hover:bg-zinc-800 flex items-center justify-center text-gray-700 dark:text-gray-300 transition-colors relative">
+              ${ic('heart')}
+              ${wl > 0 ? `<span class="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">${wl}</span>` : ''}
+            </button>
+            <button onclick="navigate('profile')" class="hidden sm:flex w-10 h-10 rounded-xl hover:bg-gray-100 dark:hover:bg-zinc-800 items-center justify-center text-gray-700 dark:text-gray-300 transition-colors">${ic('user')}</button>
+            <button onclick="navigate('cart')" class="relative flex items-center gap-2 h-10 px-3 sm:px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+              ${ic('cart')}
+              <span class="hidden sm:block text-sm font-medium">Savat</span>
+              ${cc > 0 ? `<span class="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-amber-400 text-blue-900 text-[10px] font-bold flex items-center justify-center">${cc}</span>` : ''}
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+  `;
+}
+
+function renderSidebar() {
+  const navItems = [
+    { icon: 'home', label: 'Bosh sahifa', page: 'home' },
+    { icon: 'tag', label: 'Aksiyalar', page: 'category', category: 'sale' },
+    { icon: 'package', label: 'Buyurtmalarim', page: 'orders' },
+    { icon: 'cart', label: 'Savat', page: 'cart' },
+    { icon: 'user', label: 'Profil', page: 'profile' },
+    { icon: 'sliders', label: 'Admin panel', page: 'admin' },
+  ];
+  return `
+    ${state.sidebarOpen ? `<div class="fixed inset-0 bg-black/40 z-50 lg:hidden" onclick="state.sidebarOpen=false; render()"></div>` : ''}
+    <aside class="fixed lg:sticky top-0 left-0 z-50 lg:z-30 h-screen lg:h-[calc(100vh-120px)] lg:top-[120px] w-72 shrink-0 bg-white dark:bg-zinc-950 border-r border-gray-100 dark:border-zinc-800 transition-transform duration-300 ${state.sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}">
+      <div class="flex items-center justify-between p-4 lg:hidden border-b border-gray-100 dark:border-zinc-800">
+        <span class="font-bold text-gray-900 dark:text-white">Menyu</span>
+        <button onclick="state.sidebarOpen=false; render()" class="p-2 text-gray-500">${ic('close')}</button>
+      </div>
+      <div class="p-4 overflow-y-auto h-full space-y-6">
+        <div>
+          <h3 class="text-xs font-semibold text-gray-400 uppercase mb-2 px-3">Navigatsiya</h3>
+          <div class="space-y-1">
+            ${navItems.map(item => `
+              <button onclick="navigate('${item.page}', ${item.category ? `{category:'${item.category}'}` : `{}`})"
+                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${state.page===item.page ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-900'}">
+                ${ic(item.icon)} ${item.label}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold text-gray-400 uppercase mb-2 px-3">Kategoriyalar</h3>
+          <div class="space-y-1">
+            ${categories.map(cat => `
+              <button onclick="navigate('category', {category:'${cat.id}'})"
+                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${state.category===cat.id ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-900'}">
+                ${ic(cat.icon)} ${cat.name}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        <div class="space-y-3 pt-2 border-t border-gray-100 dark:border-zinc-800">
+          <div class="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 dark:text-gray-400">${ic('truck')} Tez yetkazib berish</div>
+          <div class="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 dark:text-gray-400">${ic('shield')} Rasmiy kafolat</div>
+          <div class="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 dark:text-gray-400">${ic('headphones2')} 24/7 qo'llab-quvvatlash</div>
+        </div>
+      </div>
+    </aside>
+  `;
+}
+
+function renderMobileNav() {
+  const cc = cartCount();
+  const items = [
+    { icon: 'home', label: 'Bosh sahifa', page: 'home' },
+    { icon: 'search', label: 'Qidirish', page: 'category', category: 'all' },
+    { icon: 'heart', label: 'Sevimli', page: 'profile' },
+    { icon: 'cart', label: 'Savat', page: 'cart', badge: cc },
+    { icon: 'user', label: 'Profil', page: 'profile' },
+  ];
+  return `
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-zinc-950 border-t border-gray-100 dark:border-zinc-800">
+      <div class="flex items-center justify-around h-16">
+        ${items.map(item => {
+          const active = state.page === item.page;
+          return `
+            <button onclick="navigate('${item.page}', ${item.category ? `{category:'${item.category}'}` : `{}`})"
+              class="relative flex flex-col items-center gap-0.5 px-3 py-1.5 transition-colors ${active ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'}">
+              ${ic(item.icon)}
+              <span class="text-[10px] font-medium">${item.label}</span>
+              ${item.badge && item.badge > 0 ? `<span class="absolute top-0 right-1 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center">${item.badge}</span>` : ''}
+            </button>
+          `;
+        }).join('')}
+      </div>
+    </nav>
+  `;
+}
+
+function renderPage() {
+  switch (state.page) {
+    case 'home': return renderHome();
+    case 'category': return renderCategory();
+    case 'product': return renderProductDetail();
+    case 'cart': return renderCart();
+    case 'checkout': return renderCheckout();
+    case 'profile': return renderProfile();
+    case 'orders': return renderOrders();
+    case 'admin': return renderAdmin();
+    default: return renderHome();
+  }
+}
+
+function productCard(p) {
+  const wl = state.wishlist.includes(p.id);
+  const d = discount(p.price, p.oldPrice);
+  const added = state.addedId === p.id;
+  return `
+    <div class="product-card group relative bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-gray-200 dark:hover:border-zinc-700">
+      <div class="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
+        ${p.badge ? `<span class="px-2.5 py-1 text-[11px] font-semibold rounded-lg text-white ${p.badge==='Aksiya'?'bg-red-500':p.badge==='Yangi'?'bg-emerald-500':'bg-amber-500'}">${p.badge}</span>` : ''}
+        ${d > 0 ? `<span class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-blue-500 text-white">-${d}%</span>` : ''}
+      </div>
+      <button onclick="event.stopPropagation(); toggleWishlist(${p.id})"
+        class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all ${wl ? 'bg-red-50 dark:bg-red-900/30 text-red-500' : 'bg-gray-50 dark:bg-zinc-800 text-gray-400 hover:text-red-500'}">
+        ${wl ? ic('heartFill') : ic('heart')}
+      </button>
+      <div class="relative aspect-square bg-gray-50 dark:bg-zinc-800 cursor-pointer overflow-hidden" onclick="navigate('product',{product:products.find(x=>x.id===${p.id})})">
+        <img src="${p.image}" alt="${p.name}" class="card-img w-full h-full object-cover transition-transform duration-500" loading="lazy" />
+        <div class="quick-view absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center opacity-0">
+          <span class="bg-white dark:bg-zinc-900 text-gray-900 dark:text-white px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-1.5 shadow-lg">${ic('eye')} Ko'rib chiqish</span>
+        </div>
+      </div>
+      <div class="p-3.5 space-y-2">
+        <div class="flex items-center gap-1 text-amber-400">${ic('star')}<span class="text-xs font-medium text-gray-600 dark:text-gray-400">${p.rating} (${p.reviewCount})</span></div>
+        <h3 class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors min-h-[2.5rem]" onclick="navigate('product',{product:products.find(x=>x.id===${p.id})})">${p.name}</h3>
+        <div class="flex items-end justify-between pt-1">
+          <div>
+            <div class="text-base font-bold text-gray-900 dark:text-white">${fmt(p.price)}</div>
+            ${p.oldPrice ? `<div class="text-xs text-gray-400 line-through">${fmt(p.oldPrice)}</div>` : ''}
+          </div>
+          <button onclick="event.stopPropagation(); addToCart(products.find(x=>x.id===${p.id}))"
+            class="w-10 h-10 rounded-xl ${added?'bg-emerald-500':'bg-blue-600 hover:bg-blue-700'} text-white flex items-center justify-center transition-colors active:scale-90">
+            ${added ? ic('check') : ic('cart')}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderHome() {
+  const top = products.filter(p => p.badge === 'Top');
+  const nw = products.filter(p => p.badge === 'Yangi');
+  const sale = products.filter(p => p.badge === 'Aksiya');
+  const featured = products.slice(0, 10);
+  return `
+    <div class="space-y-8 pb-8">
+      <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white">
+        <div class="absolute inset-0 opacity-10"><div class="absolute top-10 right-10 w-64 h-64 rounded-full bg-white blur-3xl"></div><div class="absolute bottom-0 left-20 w-48 h-48 rounded-full bg-amber-300 blur-3xl"></div></div>
+        <div class="relative px-6 sm:px-10 py-10 sm:py-16 max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur text-xs font-medium mb-4">${ic('zap')} Yozgi aksiya — 50% gacha chegirma</div>
+          <h1 class="text-3xl sm:text-5xl font-bold leading-tight mb-4">Elektronikada eng yaxshi narhlar</h1>
+          <p class="text-blue-100 text-base sm:text-lg mb-6 max-w-lg">Telefon uchun aksessuarlar, audio qurilmalar, smart gadjetlar va ko'plab mahsulotlar. Toshkent bo'ylab bepul yetkazib berish.</p>
+          <div class="flex flex-wrap gap-3">
+            <button onclick="navigate('category',{category:'all'})" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-blue-700 font-semibold text-sm hover:bg-blue-50 transition-colors active:scale-95">Xarid qilish ${ic('arrow')}</button>
+            <button onclick="navigate('category',{category:'sale'})" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 backdrop-blur text-white font-semibold text-sm hover:bg-white/20 transition-colors">Aksiyalar</button>
+          </div>
+        </div>
+      </section>
+      <section class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        ${[{icon:'truck',t:'Bepul yetkazish',d:"Toshkent bo'ylab"},{icon:'shield',t:'Rasmiy kafolat',d:'12 oygacha'},{icon:'rotate',t:'14 kun qaytarish',d:'Shubhasiz'},{icon:'headphones2',t:'24/7 yordam',d:'Doimo online'}].map(f=>`
+          <div class="flex items-center gap-3 p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">${ic(f.icon)}</div>
+            <div><div class="text-sm font-semibold text-gray-900 dark:text-white">${f.t}</div><div class="text-xs text-gray-500 dark:text-gray-400">${f.d}</div></div>
+          </div>
+        `).join('')}
+      </section>
+      <section>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Kategoriyalar</h2>
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
+          ${categories.map(cat=>`
+            <button onclick="navigate('category',{category:'${cat.id}'})" class="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition-all">
+              <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">${ic(cat.icon)}</div>
+              <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center leading-tight">${cat.name}</span>
+            </button>
+          `).join('')}
+        </div>
+      </section>
+
+      <section class="grid md:grid-cols-3 gap-4">
+        <div class="md:col-span-2 relative overflow-hidden rounded-3xl bg-gradient-to-br from-fuchsia-600 via-pink-600 to-rose-500 text-white p-6 sm:p-8 min-h-[200px]">
+          <div class="absolute -right-10 -bottom-10 w-56 h-56 rounded-full bg-white/10"></div>
+          <div class="relative">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur text-[11px] font-semibold uppercase tracking-wide mb-3">${ic('zap')} Flash sale · faqat bugun</div>
+            <h3 class="text-2xl sm:text-3xl font-bold mb-2 leading-tight">Audio texnikada 30% chegirma</h3>
+            <p class="text-pink-50 text-sm mb-4 max-w-md">Sony, JBL, Anker va boshqa top brendlar cheklangan miqdorda aksiyada.</p>
+            <button onclick="navigate('category',{category:'audio'})" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-rose-600 font-semibold text-sm hover:bg-rose-50">Xarid qilish ${ic('arrow')}</button>
+          </div>
+        </div>
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 min-h-[200px]">
+          <div class="absolute -right-6 -top-6 w-32 h-32 rounded-full bg-white/10"></div>
+          <div class="relative">
+            <div class="text-[11px] font-semibold uppercase tracking-wide text-emerald-100 mb-2">Premium</div>
+            <h3 class="text-xl font-bold mb-2">Smart soatlar</h3>
+            <p class="text-emerald-50 text-sm mb-4">Apple, Samsung, Xiaomi</p>
+            <button onclick="navigate('category',{category:'smart'})" class="inline-flex items-center gap-1.5 text-sm font-semibold hover:gap-2 transition-all">Ko'rish ${ic('arrow')}</button>
+          </div>
+        </div>
+      </section>
+
+      ${top.length > 0 ? `
+        <section>
+          <div class="flex items-center justify-between mb-4"><h2 class="text-xl font-bold text-gray-900 dark:text-white">Top mahsulotlar</h2>
+            <button onclick="navigate('category',{category:'all'})" class="text-sm text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1 hover:gap-2 transition-all">Barchasi ${ic('arrow')}</button>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">${top.map(p=>productCard(p)).join('')}</div>
+        </section>
+      ` : ''}
+      ${sale.length > 0 ? `
+        <section class="rounded-3xl bg-gradient-to-r from-amber-400 to-orange-500 p-6 sm:p-8 text-white relative overflow-hidden">
+          <div class="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10"></div><div class="absolute -right-4 bottom-0 w-24 h-24 rounded-full bg-white/10"></div>
+          <div class="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div><div class="text-xs font-semibold uppercase tracking-wide text-amber-100 mb-1">Aksiya</div><h2 class="text-2xl sm:text-3xl font-bold mb-2">Yozgi ranglar aksiyasi</h2><p class="text-amber-50 text-sm">Chegirma bilan mahsulotlarni hoziroq oling</p></div>
+            <button onclick="navigate('category',{category:'sale'})" class="px-5 py-3 rounded-xl bg-white text-orange-600 font-semibold text-sm hover:bg-orange-50 transition-colors shrink-0">Aksiyani ko'rish</button>
+          </div>
+        </section>
+      ` : ''}
+      ${nw.length > 0 ? `
+        <section>
+          <div class="flex items-center justify-between mb-4"><h2 class="text-xl font-bold text-gray-900 dark:text-white">Yangi mahsulotlar</h2>
+            <button onclick="navigate('category',{category:'all'})" class="text-sm text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1 hover:gap-2 transition-all">Barchasi ${ic('arrow')}</button>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">${nw.map(p=>productCard(p)).join('')}</div>
+        </section>
+      ` : ''}
+      <section>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Tavsiya etamiz</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">${featured.map(p=>productCard(p)).join('')}</div>
+      </section>
+    </div>
+  `;
+}
+
+function renderCategory() {
+  const cat = state.category || 'all';
+  const catName = categories.find(c => c.id === cat)?.name || 'Barcha mahsulotlar';
+  let filtered = [...products];
+  if (cat === 'sale') filtered = filtered.filter(p => p.badge === 'Aksiya' || p.oldPrice);
+  else if (cat !== 'all') filtered = filtered.filter(p => p.category === cat);
+  if (state.searchQuery) {
+    const q = state.searchQuery.toLowerCase();
+    filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
+  }
+  filtered = filtered.filter(p => p.price >= 0 && p.price <= state.priceRange);
+  switch (state.sort) {
+    case 'price-asc': filtered.sort((a,b) => a.price - b.price); break;
+    case 'price-desc': filtered.sort((a,b) => b.price - a.price); break;
+    case 'rating': filtered.sort((a,b) => b.rating - a.rating); break;
+    case 'new': filtered.sort((a,b) => (b.badge==='Yangi'?1:0)-(a.badge==='Yangi'?1:0)); break;
+    default: filtered.sort((a,b) => b.reviewCount - a.reviewCount);
+  }
+
+  const filterPanel = `
+    <div class="space-y-6">
+      <div>
+        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Kategoriyalar</h3>
+        <div class="space-y-1">
+          <button onclick="navigate('category',{category:'all'})" class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${cat==='all'?'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium':'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-900'}">Barcha mahsulotlar</button>
+          ${categories.map(c=>`
+            <button onclick="navigate('category',{category:'${c.id}'})" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${cat===c.id?'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium':'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-900'}">${ic(c.icon)} ${c.name}</button>
+          `).join('')}
+        </div>
+      </div>
+      <div>
+        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Narx oralig'i</h3>
+        <input type="range" min="0" max="5000000" step="50000" value="${state.priceRange}" oninput="state.priceRange=+this.value; document.getElementById('price-val').textContent=new Intl.NumberFormat('uz-UZ').format(state.priceRange)+' so\'m'; render()" class="w-full accent-blue-600" />
+        <div class="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 mt-2"><span>0 so'm</span><span id="price-val">${new Intl.NumberFormat('uz-UZ').format(state.priceRange)} so'm</span></div>
+      </div>
+    </div>
+  `;
+
+  return `
+    <div class="pb-8">
+      <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <button onclick="navigate('home')" class="hover:text-blue-600">Bosh sahifa</button><span>/</span>
+        <span class="text-gray-900 dark:text-white font-medium">${catName}</span>
+      </div>
+      <div class="flex items-center justify-between mb-5">
+        <div><h1 class="text-2xl font-bold text-gray-900 dark:text-white">${catName}</h1><p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">${filtered.length} ta mahsulot topildi</p></div>
+        <div class="flex items-center gap-2">
+          <select onchange="state.sort=this.value; render()" class="appearance-none h-10 pl-4 pr-9 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:border-blue-500">
+            <option value="popular" ${state.sort==='popular'?'selected':''}>Mashhur</option>
+            <option value="price-asc" ${state.sort==='price-asc'?'selected':''}>Arzon boshlab</option>
+            <option value="price-desc" ${state.sort==='price-desc'?'selected':''}>Qimmat boshlab</option>
+            <option value="rating" ${state.sort==='rating'?'selected':''}>Reyting</option>
+            <option value="new" ${state.sort==='new'?'selected':''}>Yangilar</option>
+          </select>
+          <button onclick="state.filterOpen=true; render()" class="lg:hidden h-10 px-3 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1.5">${ic('sliders')} Filtr</button>
+        </div>
+      </div>
+      <div class="flex gap-6">
+        <aside class="hidden lg:block w-64 shrink-0"><div class="sticky top-[130px] bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-5">${filterPanel}</div></aside>
+        <div class="flex-1">
+          ${filtered.length > 0 ? `<div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">${filtered.map(p=>productCard(p)).join('')}</div>` : `
+            <div class="flex flex-col items-center justify-center py-20 text-center">
+              <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center mb-4">${ic('sliders')}</div>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Mahsulot topilmadi</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Filtrlarni o'zgartirib qayta urinib ko'ring</p>
+            </div>
+          `}
+        </div>
+      </div>
+      ${state.filterOpen ? `
+        <div class="lg:hidden fixed inset-0 z-50">
+          <div class="absolute inset-0 bg-black/40" onclick="state.filterOpen=false; render()"></div>
+          <div class="absolute bottom-0 left-0 right-0 max-h-[80vh] bg-white dark:bg-zinc-950 rounded-t-3xl p-5 overflow-y-auto">
+            <div class="flex items-center justify-between mb-4"><h2 class="text-lg font-bold text-gray-900 dark:text-white">Filtrlash</h2><button onclick="state.filterOpen=false; render()" class="p-2 text-gray-500">${ic('close')}</button></div>
+            ${filterPanel}
+            <button onclick="state.filterOpen=false; render()" class="w-full mt-6 h-12 rounded-xl bg-blue-600 text-white font-semibold text-sm">Ko'rsatish (${filtered.length})</button>
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function renderProductDetail() {
+  const p = state.product;
+  if (!p) return `<div class="flex flex-col items-center justify-center py-20"><p class="text-gray-500 dark:text-gray-400 mb-4">Mahsulot topilmadi</p><button onclick="navigate('home')" class="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-medium">Bosh sahifaga qaytish</button></div>`;
+  const images = (p.images && p.images.length > 0) ? p.images : [p.image];
+  const d = discount(p.price, p.oldPrice);
+  const related = products.filter(x => x.category === p.category && x.id !== p.id).slice(0, 5);
+  return `
+    <div class="pb-8 space-y-8">
+      <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+        <button onclick="navigate('home')" class="hover:text-blue-600">Bosh sahifa</button><span>/</span>
+        <button onclick="navigate('category',{category:'${p.category}'})" class="hover:text-blue-600">${categories.find(c=>c.id===p.category)?.name||p.category}</button><span>/</span>
+        <span class="text-gray-900 dark:text-white font-medium truncate">${p.name}</span>
+      </div>
+      <button onclick="navigate('category',{category:'${p.category}'})" class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">${ic('chevronLeft')} Orqaga</button>
+      <div class="grid lg:grid-cols-2 gap-6 lg:gap-10">
+        <div class="space-y-3">
+          <div class="relative aspect-square rounded-2xl overflow-hidden bg-gray-50 dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800">
+            ${p.badge ? `<span class="absolute top-4 left-4 z-10 px-3 py-1.5 text-xs font-semibold rounded-lg text-white ${p.badge==='Aksiya'?'bg-red-500':p.badge==='Yangi'?'bg-emerald-500':'bg-amber-500'}">${p.badge}</span>` : ''}
+            ${d > 0 ? `<span class="absolute top-4 right-4 z-10 px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-500 text-white">-${d}%</span>` : ''}
+            <img id="main-img" src="${images[0]}" alt="${p.name}" class="w-full h-full object-cover" />
+          </div>
+          ${images.length > 1 ? `<div class="flex gap-2">${images.map((img,i)=>`<button onclick="document.getElementById('main-img').src='${img}'" class="w-20 h-20 rounded-xl overflow-hidden border-2 border-gray-200 dark:border-zinc-800 hover:border-blue-600 transition-colors"><img src="${img}" class="w-full h-full object-cover" /></button>`).join('')}</div>` : ''}
+        </div>
+        <div class="space-y-5">
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="flex items-center gap-1 text-amber-400">${ic('star')}<span class="text-sm font-bold text-gray-900 dark:text-white">${p.rating}</span></div>
+              <span class="text-sm text-gray-500 dark:text-gray-400">· ${p.reviewCount} sharhlar</span>
+              ${p.inStock ? `<span class="ml-auto flex items-center gap-1 text-sm text-emerald-600 dark:text-emerald-400 font-medium">${ic('check')} Mavjud</span>` : ''}
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">${p.name}</h1>
+            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">${p.description}</p>
+          </div>
+          <div class="flex items-end gap-3">
+            <div class="text-3xl font-bold text-gray-900 dark:text-white">${fmt(p.price)}</div>
+            ${p.oldPrice ? `<div class="text-lg text-gray-400 line-through mb-1">${fmt(p.oldPrice)}</div>` : ''}
+          </div>
+          ${p.colors && p.colors.length > 0 ? `
+            <div><h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">Rang:</h3>
+              <div class="flex gap-2">${p.colors.map((c,i)=>`<button onclick="this.parentElement.querySelectorAll('button').forEach(b=>{b.className='w-10 h-10 rounded-full border-2 border-gray-200 dark:border-zinc-700'}); this.className='w-10 h-10 rounded-full border-2 border-blue-600 ring-2 ring-blue-500/20 scale-110'" class="w-10 h-10 rounded-full border-2 ${i===0?'border-blue-600 ring-2 ring-blue-500/20 scale-110':'border-gray-200 dark:border-zinc-700'}" style="background:${c}"></button>`).join('')}</div>
+            </div>
+          ` : ''}
+          <div class="flex items-center gap-3 pt-2">
+            <div class="flex items-center border border-gray-200 dark:border-zinc-700 rounded-xl overflow-hidden">
+              <button onclick="var el=document.getElementById('qty'); var v=Math.max(1,+el.textContent-1); el.textContent=v" class="w-11 h-12 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800">${ic('minus')}</button>
+              <span id="qty" class="w-12 text-center font-semibold text-gray-900 dark:text-white">1</span>
+              <button onclick="var el=document.getElementById('qty'); var v=+el.textContent+1; el.textContent=v" class="w-11 h-12 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800">${ic('plus')}</button>
+            </div>
+            <button onclick="var q=+document.getElementById('qty').textContent; for(var i=0;i<q;i++) addToCart(products.find(x=>x.id===${p.id}))" class="flex-1 h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm flex items-center justify-center gap-2 transition-all active:scale-95">${ic('cart')} Savatga qo'shish</button>
+            <button onclick="toggleWishlist(${p.id})" class="w-12 h-12 rounded-xl border flex items-center justify-center transition-colors ${state.wishlist.includes(p.id)?'border-red-200 bg-red-50 dark:bg-red-900/20 text-red-500':'border-gray-200 dark:border-zinc-700 text-gray-400 hover:text-red-500'}">${state.wishlist.includes(p.id)?ic('heartFill'):ic('heart')}</button>
+          </div>
+          <button onclick="var q=+document.getElementById('qty').textContent; for(var i=0;i<q;i++) addToCart(products.find(x=>x.id===${p.id})); navigate('checkout')" class="w-full h-12 rounded-xl bg-amber-400 hover:bg-amber-500 text-amber-900 font-semibold text-sm transition-colors active:scale-95">Hoziroq sotib olish</button>
+          <div class="grid grid-cols-3 gap-3 pt-4 border-t border-gray-100 dark:border-zinc-800">
+            ${[{icon:'truck',l:'Bepul yetkazish'},{icon:'shield',l:'Rasmiy kafolat'},{icon:'rotate',l:'14 kun qaytarish'}].map(f=>`<div class="flex flex-col items-center gap-1.5 text-center"><span class="text-blue-600 dark:text-blue-400">${ic(f.icon)}</span><span class="text-xs text-gray-600 dark:text-gray-400">${f.l}</span></div>`).join('')}
+          </div>
+        </div>
+      </div>
+      ${related.length > 0 ? `
+        <section><h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">O'xshash mahsulotlar</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">${related.map(x=>productCard(x)).join('')}</div>
+        </section>
+      ` : ''}
+    </div>
+  `;
+}
+
+function renderCart() {
+  if (state.cart.length === 0) {
+    return `<div class="flex flex-col items-center justify-center py-20 text-center">
+      <div class="w-24 h-24 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center mb-5 text-gray-300 dark:text-gray-600">${ic('bag')}</div>
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Savat bo'sh</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Hozircha savatga hech narsa qo'shilmagan</p>
+      <button onclick="navigate('category',{category:'all'})" class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold flex items-center gap-2 transition-colors">Xarid qilish ${ic('arrow')}</button>
+    </div>`;
+  }
+  const ct = cartTotal();
+  const ship = ct >= 1000000 ? 0 : 25000;
+  const total = ct + ship;
+  return `
+    <div class="pb-8">
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Savat (${state.cart.length})</h1>
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-3">
+          ${state.cart.map(item=>`
+            <div class="flex gap-4 p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800">
+              <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-gray-50 dark:bg-zinc-800 shrink-0 cursor-pointer" onclick="navigate('product',{product:products.find(x=>x.id===${item.product.id})})"><img src="${item.product.image}" class="w-full h-full object-cover" /></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-2">
+                  <h3 class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 cursor-pointer hover:text-blue-600" onclick="navigate('product',{product:products.find(x=>x.id===${item.product.id})})">${item.product.name}</h3>
+                  <button onclick="removeFromCart(${item.product.id})" class="text-gray-400 hover:text-red-500 transition-colors shrink-0">${ic('trash')}</button>
+                </div>
+                ${item.color ? `<div class="flex items-center gap-1.5 mt-1.5"><span class="text-xs text-gray-500 dark:text-gray-400">Rang:</span><span class="w-4 h-4 rounded-full border border-gray-200 dark:border-zinc-700" style="background:${item.color}"></span></div>` : ''}
+                <div class="flex items-end justify-between mt-3">
+                  <div class="flex items-center border border-gray-200 dark:border-zinc-700 rounded-lg overflow-hidden">
+                    <button onclick="updateQty(${item.product.id},-1)" class="w-8 h-8 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800">${ic('minus')}</button>
+                    <span class="w-9 text-center text-sm font-semibold text-gray-900 dark:text-white">${item.quantity}</span>
+                    <button onclick="updateQty(${item.product.id},1)" class="w-8 h-8 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800">${ic('plus')}</button>
+                  </div>
+                  <div class="text-right"><div class="text-base font-bold text-gray-900 dark:text-white">${fmt(item.product.price * item.quantity)}</div>${item.quantity > 1 ? `<div class="text-xs text-gray-500 dark:text-gray-400">${fmt(item.product.price)} / dona</div>` : ''}</div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+          <button onclick="navigate('category',{category:'all'})" class="text-sm text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1.5 hover:gap-2.5 transition-all pt-2">${ic('arrow')} Xaridni davom ettirish</button>
+        </div>
+        <div class="lg:col-span-1"><div class="sticky top-[130px] space-y-4">
+          <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-5 space-y-4">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white">Buyurtma xulosasi</h2>
+            <div class="flex items-center gap-2 p-3 rounded-xl bg-gray-50 dark:bg-zinc-800">${ic('tag')}<input type="text" placeholder="Promokod" class="flex-1 bg-transparent text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none" /><button class="text-sm font-medium text-blue-600 dark:text-blue-400">Qo'llash</button></div>
+            <div class="space-y-2.5 text-sm">
+              <div class="flex items-center justify-between"><span class="text-gray-600 dark:text-gray-400">Mahsulotlar (${state.cart.length})</span><span class="font-medium text-gray-900 dark:text-white">${fmt(ct)}</span></div>
+              <div class="flex items-center justify-between"><span class="text-gray-600 dark:text-gray-400 flex items-center gap-1.5">${ic('truck')} Yetkazib berish</span><span class="font-medium ${ship===0?'text-emerald-600 dark:text-emerald-400':'text-gray-900 dark:text-white'}">${ship===0?'Bepul':fmt(ship)}</span></div>
+              ${ship > 0 ? `<p class="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-2.5">${fmt(1000000-ct)} dan ortiq xarid qilsangiz, yetkazib berish bepul bo'ladi</p>` : ''}
+            </div>
+            <div class="pt-4 border-t border-gray-100 dark:border-zinc-800 space-y-3">
+              <div class="flex items-center justify-between"><span class="text-base font-semibold text-gray-900 dark:text-white">Jami</span><span class="text-xl font-bold text-gray-900 dark:text-white">${fmt(total)}</span></div>
+              <button onclick="navigate('checkout')" class="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors active:scale-95">Buyurtma berish ${ic('arrow')}</button>
+            </div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCheckout() {
+  if (state.cart.length === 0 && state.checkoutStep !== 'success') {
+    return `<div class="flex flex-col items-center justify-center py-20 text-center"><p class="text-gray-500 dark:text-gray-400 mb-4">Savat bo'sh</p><button onclick="navigate('home')" class="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-medium">Bosh sahifaga qaytish</button></div>`;
+  }
+  if (state.checkoutStep === 'success') {
+    return `<div class="flex flex-col items-center justify-center py-16 text-center max-w-md mx-auto">
+      <div class="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-5 animate-bounce-once text-emerald-600 dark:text-emerald-400">${ic('check')}</div>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Buyurtma qabul qilindi!</h1>
+      <p class="text-gray-600 dark:text-gray-400 mb-1">Buyurtmangiz raqami: <span class="font-semibold text-gray-900 dark:text-white">#IM-2026-1288</span></p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Tez orada operator siz bilan bog'lanadi va buyurtmani tasdiqlaydi</p>
+      <div class="flex gap-3"><button onclick="navigate('home')" class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold">Bosh sahifaga qaytish</button><button onclick="navigate('orders')" class="px-5 py-3 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-gray-700 dark:text-gray-300 text-sm font-semibold">Buyurtmalarim</button></div>
+    </div>`;
+  }
+
+  const ct = cartTotal();
+  const ship = ct >= 1000000 ? 0 : 25000;
+  const total = ct + ship;
+  const inputCls = "w-full h-12 pl-11 pr-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all";
+
+  return `
+    <div class="pb-8">
+      <button onclick="${state.checkoutStep==='payment'?"state.checkoutStep='info'; render()":"navigate('cart')"}" class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 mb-4">${ic('chevronLeft')} Orqaga</button>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Buyurtma rasmiylashtirish</h1>
+      <div class="flex items-center gap-2 mb-6">
+        <div class="flex items-center gap-2 ${state.checkoutStep==='info'?'text-blue-600 dark:text-blue-400':'text-gray-400'}"><div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${state.checkoutStep==='info'?'bg-blue-600 text-white':'bg-gray-200 dark:bg-zinc-800 text-gray-500'}">1</div><span class="text-sm font-medium">Ma'lumot</span></div>
+        <div class="flex-1 h-0.5 bg-gray-200 dark:bg-zinc-800"></div>
+        <div class="flex items-center gap-2 ${state.checkoutStep==='payment'?'text-blue-600 dark:text-blue-400':'text-gray-400'}"><div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${state.checkoutStep==='payment'?'bg-blue-600 text-white':'bg-gray-200 dark:bg-zinc-800 text-gray-500'}">2</div><span class="text-sm font-medium">To'lov</span></div>
+      </div>
+      <form onsubmit="event.preventDefault(); ${state.checkoutStep==='info'?"state.checkoutStep='payment'; render()":"state.checkoutStep='success'; state.cart=[]; saveState(); render()"}" class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-4">
+          ${state.checkoutStep === 'info' ? `
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-5 space-y-4">
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white">Yetkazib berish ma'lumotlari</h2>
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div class="relative">${ic('user')}<input required type="text" placeholder="Ism familiyangiz" class="${inputCls}" /></div>
+                <div class="relative">${ic('phone')}<input required type="tel" placeholder="+998 90 123 45 67" class="${inputCls}" /></div>
+              </div>
+              <div class="relative">${ic('pin')}<input required type="text" placeholder="Manzil (ko'cha, uy, kvartira)" class="${inputCls}" /></div>
+              <div class="relative">${ic('truck')}<select class="${inputCls} cursor-pointer"><option>Toshkent</option><option>Samarqand</option><option>Buxoro</option><option>Andijon</option><option>Farg'ona</option></select></div>
+              <textarea placeholder="Qo'shimcha izoh (ixtiyoriy)" rows="3" class="w-full p-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 resize-none"></textarea>
+            </div>
+          ` : `
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-5 space-y-3">
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-2">To'lov usuli</h2>
+              ${[{id:'cash',icon:'banknote',l:'Naqd pul',d:"Yetkazib berishda to'lash"},{id:'card',icon:'creditCard',l:'Karta orqali',d:'Yetkazib berishda terminal orqali'},{id:'online',icon:'wallet',l:"Online to'lov",d:'Click / Payme orqali'}].map(m=>`
+                <button type="button" onclick="state.paymentMethod='${m.id}'; render()" class="w-full flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left ${state.paymentMethod===m.id?'border-blue-600 bg-blue-50 dark:bg-blue-900/20':'border-gray-200 dark:border-zinc-800 hover:border-gray-300'}">
+                  <span class="${state.paymentMethod===m.id?'text-blue-600 dark:text-blue-400':'text-gray-400'}">${ic(m.icon)}</span>
+                  <div class="flex-1"><div class="text-sm font-semibold text-gray-900 dark:text-white">${m.l}</div><div class="text-xs text-gray-500 dark:text-gray-400">${m.d}</div></div>
+                  <div class="w-5 h-5 rounded-full border-2 ${state.paymentMethod===m.id?'border-blue-600 bg-blue-600':'border-gray-300'}">${state.paymentMethod===m.id?'<span class="text-white">'+ic('check')+'</span>':''}</div>
+                </button>
+              `).join('')}
+            </div>
+          `}
+          <button type="submit" class="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors active:scale-95">${state.checkoutStep==='info'?"Davom etish":"Buyurtmani tasdiqlash"}</button>
+        </div>
+        <div class="lg:col-span-1"><div class="sticky top-[130px] bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-5 space-y-4">
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">Buyurtmangiz</h2>
+          <div class="space-y-3 max-h-64 overflow-y-auto">
+            ${state.cart.map(item=>`
+              <div class="flex gap-3"><div class="w-14 h-14 rounded-lg overflow-hidden bg-gray-50 dark:bg-zinc-800 shrink-0"><img src="${item.product.image}" class="w-full h-full object-cover" /></div>
+                <div class="flex-1 min-w-0"><div class="text-sm font-medium text-gray-900 dark:text-white line-clamp-1">${item.product.name}</div><div class="text-xs text-gray-500 dark:text-gray-400">${item.quantity} × ${fmt(item.product.price)}</div></div>
+                <div class="text-sm font-semibold text-gray-900 dark:text-white shrink-0">${fmt(item.product.price * item.quantity)}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="pt-4 border-t border-gray-100 dark:border-zinc-800 space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Mahsulotlar</span><span class="font-medium text-gray-900 dark:text-white">${fmt(ct)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Yetkazib berish</span><span class="font-medium ${ship===0?'text-emerald-600':'text-gray-900 dark:text-white'}">${ship===0?'Bepul':fmt(ship)}</span></div>
+            <div class="flex justify-between pt-2 border-t border-gray-100 dark:border-zinc-800"><span class="text-base font-semibold text-gray-900 dark:text-white">Jami</span><span class="text-lg font-bold text-gray-900 dark:text-white">${fmt(total)}</span></div>
+          </div>
+        </div></div>
+      </form>
+    </div>
+  `;
+}
+
+function renderProfile() {
+  const wlProducts = products.filter(p => state.wishlist.includes(p.id));
+  const stats = [{l:'Buyurtmalar',v:'12',i:'package'},{l:'Sevimlilar',v:state.wishlist.length.toString(),i:'heart'},{l:"Sevimli kategoriya",v:'Audio',i:'settings'}];
+  const menuItems = [{i:'package',l:'Buyurtmalarim',d:'Barcha buyurtmalaringiz tarixi',p:'orders'},{i:'pin',l:'Mening manzillarim',d:'Saqlangan manzillar',p:'profile'},{i:'creditCard',l:"To'lov kartalari",d:'Kartalar boshqaruvi',p:'profile'},{i:'bell',l:'Bildirishnomalar',d:'Push xabarnoma sozlamalari',p:'profile'},{i:'settings',l:'Sozlamalar',d:'Profil va xavfsizlik',p:'profile'}];
+  return `
+    <div class="pb-8 space-y-6">
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Profil</h1>
+      <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-6 text-white relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/10"></div>
+        <div class="relative flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center text-2xl font-bold">AK</div>
+          <div class="flex-1"><h2 class="text-xl font-bold">Aziz Karimov</h2><p class="text-blue-100 text-sm">+998 90 123 45 67</p><p class="text-blue-200 text-xs mt-0.5">aziz.karimov@gmail.com</p></div>
+          <button class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-medium transition-colors">Tahrirlash</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        ${stats.map(s=>`<div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-4 text-center">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 mx-auto mb-2">${ic(s.i)}</div>
+          <div class="text-xl font-bold text-gray-900 dark:text-white">${s.v}</div><div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">${s.l}</div>
+        </div>`).join('')}
+      </div>
+      <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 overflow-hidden">
+        ${menuItems.map((item,i)=>`<button onclick="navigate('${item.p}')" class="w-full flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors text-left ${i!==menuItems.length-1?'border-b border-gray-100 dark:border-zinc-800':''}">
+          <div class="w-10 h-10 rounded-xl bg-gray-50 dark:bg-zinc-800 flex items-center justify-center text-gray-600 dark:text-gray-300">${ic(item.i)}</div>
+          <div class="flex-1"><div class="text-sm font-semibold text-gray-900 dark:text-white">${item.l}</div><div class="text-xs text-gray-500 dark:text-gray-400">${item.d}</div></div>
+          ${ic('chevronRight')}
+        </button>`).join('')}
+      </div>
+      <button class="w-full flex items-center justify-center gap-2 p-4 rounded-2xl border border-red-200 dark:border-red-900/30 text-red-600 dark:text-red-400 text-sm font-semibold hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">${ic('logout')} Tizimdan chiqish</button>
+      ${wlProducts.length > 0 ? `
+        <section><div class="flex items-center justify-between mb-4"><h2 class="text-xl font-bold text-gray-900 dark:text-white">Sevimli mahsulotlar</h2><span class="text-sm text-gray-500 dark:text-gray-400">${wlProducts.length} ta</span></div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">${wlProducts.map(p=>productCard(p)).join('')}</div>
+        </section>
+      ` : ''}
+    </div>
+  `;
+}
+
+function renderOrders() {
+  const statusCfg = {
+    'Yetkazilmoqda': {c:'text-blue-600 dark:text-blue-400',b:'bg-blue-50 dark:bg-blue-900/20',i:'truck'},
+    'Yetkazildi': {c:'text-amber-600 dark:text-amber-400',b:'bg-amber-50 dark:bg-amber-900/20',i:'clock'},
+    'Qabul qilindi': {c:'text-emerald-600 dark:text-emerald-400',b:'bg-emerald-50 dark:bg-emerald-900/20',i:'check'},
+    'Bekor qilindi': {c:'text-red-600 dark:text-red-400',b:'bg-red-50 dark:bg-red-900/20',i:'xCircle'},
+  };
+  return `
+    <div class="pb-8 space-y-6">
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Buyurtmalarim</h1>
+      ${ordersData.length === 0 ? `
+        <div class="flex flex-col items-center justify-center py-20 text-center">
+          <div class="w-20 h-20 rounded-full bg-gray-100 dark:bg-zinc-800 flex items-center justify-center mb-4 text-gray-300 dark:text-gray-600">${ic('package')}</div>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Buyurtmalar yo'q</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-5">Hali buyurtma bermagansiz</p>
+          <button onclick="navigate('category',{category:'all'})" class="px-5 py-3 rounded-xl bg-blue-600 text-white text-sm font-semibold">Xarid qilish</button>
+        </div>
+      ` : `
+        <div class="space-y-4">
+          ${ordersData.map(o=>{const cfg=statusCfg[o.status];return `
+            <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 overflow-hidden">
+              <div class="flex items-center justify-between p-4 border-b border-gray-100 dark:border-zinc-800">
+                <div><div class="text-sm font-bold text-gray-900 dark:text-white">${o.id}</div><div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">${o.date}</div></div>
+                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold ${cfg.b} ${cfg.c}">${ic(cfg.i)} ${o.status}</div>
+              </div>
+              <div class="p-4 space-y-3">
+                ${o.items.map((it,i)=>`<div class="flex gap-3 cursor-pointer" onclick="navigate('product',{product:products.find(x=>x.id===${it.product.id})})">
+                  <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-50 dark:bg-zinc-800 shrink-0"><img src="${it.product.image}" class="w-full h-full object-cover" /></div>
+                  <div class="flex-1 min-w-0"><div class="text-sm font-medium text-gray-900 dark:text-white line-clamp-1">${it.product.name}</div><div class="text-xs text-gray-500 dark:text-gray-400 mt-1">${it.quantity} dona × ${fmt(it.product.price)}</div></div>
+                  <div class="text-sm font-semibold text-gray-900 dark:text-white shrink-0">${fmt(it.product.price * it.quantity)}</div>
+                </div>`).join('')}
+              </div>
+              <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-zinc-800/50 border-t border-gray-100 dark:border-zinc-800">
+                <div><div class="text-xs text-gray-500 dark:text-gray-400">Jami</div><div class="text-base font-bold text-gray-900 dark:text-white">${fmt(o.total)}</div></div>
+                <button class="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 font-medium hover:gap-2 transition-all">Batafsil ${ic('chevronRight')}</button>
+              </div>
+            </div>
+          `;}).join('')}
+        </div>
+      `}
+    </div>
+  `;
+}
+
+// ===== EVENTS =====
+function renderAdmin() {
+  const tab = state.adminTab || 'products';
+  const editingP = state.editingProductId != null ? products.find(p => p.id === state.editingProductId) : null;
+  const isNewP = state.editingProductId === 'new';
+  const editingC = state.editingCategoryId != null ? categories.find(c => c.id === state.editingCategoryId) : null;
+  const isNewC = state.editingCategoryId === 'new';
+  const iconList = ['smartphone','headphones','watch','monitor','cable','cpu','tag','package'];
+  const badgeList = ['','Top','Yangi','Aksiya'];
+
+  const productForm = (p) => `
+    <form onsubmit="handleProductForm(event)" class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white">${p ? 'Mahsulotni tahrirlash' : 'Yangi mahsulot'}</h3>
+        <button type="button" onclick="state.editingProductId=null; render()" class="p-2 text-gray-500 hover:text-gray-700">${ic('close')}</button>
+      </div>
+      ${p ? `<input type="hidden" name="id" value="${p.id}" />` : ''}
+      <div class="grid sm:grid-cols-2 gap-4">
+        <label class="block"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Nomi *</span>
+          <input required name="name" value="${p?.name || ''}" class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm" /></label>
+        <label class="block"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Kategoriya *</span>
+          <select required name="category" class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm">
+            ${categories.map(c=>`<option value="${c.id}" ${p?.category===c.id?'selected':''}>${c.name}</option>`).join('')}
+          </select></label>
+        <label class="block"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Narxi (so'm) *</span>
+          <input required type="number" name="price" value="${p?.price || ''}" class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm" /></label>
+        <label class="block"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Eski narxi (ixtiyoriy)</span>
+          <input type="number" name="oldPrice" value="${p?.oldPrice || ''}" class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm" /></label>
+        <label class="block sm:col-span-2"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Asosiy rasm URL *</span>
+          <input required name="image" value="${p?.image || ''}" placeholder="https://..." class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm" /></label>
+        <label class="block sm:col-span-2"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Qo'shimcha rasmlar (vergul bilan ajrating)</span>
+          <input name="images" value="${p?.images?.join(', ') || ''}" placeholder="url1, url2, url3" class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm" /></label>
+        <label class="block"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Reyting (0-5)</span>
+          <input type="number" step="0.1" min="0" max="5" name="rating" value="${p?.rating || 5}" class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm" /></label>
+        <label class="block"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Sharhlar soni</span>
+          <input type="number" name="reviewCount" value="${p?.reviewCount || 0}" class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm" /></label>
+        <label class="block"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Belgi (badge)</span>
+          <select name="badge" class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm">
+            ${badgeList.map(b=>`<option value="${b}" ${p?.badge===b || (!p?.badge && b==='')?'selected':''}>${b || '—'}</option>`).join('')}
+          </select></label>
+        <label class="block"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Ranglar (hex, vergul bilan)</span>
+          <input name="colors" value="${p?.colors?.join(', ') || ''}" placeholder="#000000, #ffffff" class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm" /></label>
+        <label class="block sm:col-span-2"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Tavsif</span>
+          <textarea name="description" rows="4" class="mt-1 w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm">${p?.description || ''}</textarea></label>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="submit" class="flex-1 h-11 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm">Saqlash</button>
+        <button type="button" onclick="state.editingProductId=null; render()" class="px-5 h-11 rounded-xl border border-gray-200 dark:border-zinc-700 text-gray-700 dark:text-gray-300 font-medium text-sm">Bekor qilish</button>
+      </div>
+    </form>`;
+
+  const categoryForm = (c) => `
+    <form onsubmit="handleCategoryForm(event)" class="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white">${c ? 'Kategoriyani tahrirlash' : 'Yangi kategoriya'}</h3>
+        <button type="button" onclick="state.editingCategoryId=null; render()" class="p-2 text-gray-500 hover:text-gray-700">${ic('close')}</button>
+      </div>
+      ${c ? `<input type="hidden" name="id" value="${c.id}" />` : ''}
+      <div class="grid sm:grid-cols-2 gap-4">
+        <label class="block sm:col-span-2"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Nomi *</span>
+          <input required name="name" value="${c?.name || ''}" class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm" /></label>
+        <label class="block sm:col-span-2"><span class="text-xs font-semibold text-gray-600 dark:text-gray-400">Ikonka</span>
+          <select name="icon" class="mt-1 w-full h-11 px-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 text-gray-900 dark:text-white text-sm">
+            ${iconList.map(i=>`<option value="${i}" ${c?.icon===i?'selected':''}>${i}</option>`).join('')}
+          </select></label>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="submit" class="flex-1 h-11 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm">Saqlash</button>
+        <button type="button" onclick="state.editingCategoryId=null; render()" class="px-5 h-11 rounded-xl border border-gray-200 dark:border-zinc-700 text-gray-700 dark:text-gray-300 font-medium text-sm">Bekor qilish</button>
+      </div>
+    </form>`;
+
+  return `
+    <div class="space-y-6 pb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Admin panel</h1>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Mahsulotlar va kategoriyalarni boshqarish. Barcha ma'lumotlar shu qurilma xotirasida saqlanadi.</p>
+        </div>
+        <button onclick="resetAdminData()" class="self-start px-4 h-10 rounded-xl border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20">Boshlang'ich holatga</button>
+      </div>
+
+      <div class="flex gap-2 border-b border-gray-200 dark:border-zinc-800">
+        <button onclick="state.adminTab='products'; state.editingProductId=null; state.editingCategoryId=null; render()" class="px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px ${tab==='products'?'border-blue-600 text-blue-600 dark:text-blue-400':'border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'}">Mahsulotlar (${products.length})</button>
+        <button onclick="state.adminTab='categories'; state.editingProductId=null; state.editingCategoryId=null; render()" class="px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px ${tab==='categories'?'border-blue-600 text-blue-600 dark:text-blue-400':'border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'}">Kategoriyalar (${categories.length})</button>
+      </div>
+
+      ${tab === 'products' ? `
+        ${editingP || isNewP ? productForm(editingP) : `
+          <button onclick="state.editingProductId='new'; render()" class="w-full sm:w-auto inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm">${ic('plus')} Yangi mahsulot qo'shish</button>
+        `}
+        <div class="grid gap-3">
+          ${products.map(p => `
+            <div class="flex items-center gap-3 p-3 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800">
+              <img src="${p.image}" class="w-16 h-16 rounded-xl object-cover bg-gray-100 dark:bg-zinc-800" onerror="this.style.opacity=0.3" />
+              <div class="flex-1 min-w-0">
+                <div class="text-sm font-semibold text-gray-900 dark:text-white truncate">${p.name}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">${categories.find(c=>c.id===p.category)?.name || p.category} · ${fmt(p.price)}${p.badge?` · <span class="text-blue-600">${p.badge}</span>`:''}</div>
+              </div>
+              <button onclick="state.editingProductId=${p.id}; render()" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-blue-900/30 flex items-center justify-center" title="Tahrirlash">${ic('sliders')}</button>
+              <button onclick="deleteProduct(${p.id})" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-zinc-800 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 flex items-center justify-center" title="O'chirish">${ic('trash')}</button>
+            </div>
+          `).join('') || '<div class="text-sm text-gray-500 text-center py-8">Mahsulotlar yo\'q</div>'}
+        </div>
+      ` : `
+        ${editingC || isNewC ? categoryForm(editingC) : `
+          <button onclick="state.editingCategoryId='new'; render()" class="w-full sm:w-auto inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm">${ic('plus')} Yangi kategoriya qo'shish</button>
+        `}
+        <div class="grid gap-3">
+          ${categories.map(c => {
+            const count = products.filter(p => p.category === c.id).length;
+            return `
+            <div class="flex items-center gap-3 p-3 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800">
+              <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">${ic(c.icon)}</div>
+              <div class="flex-1 min-w-0">
+                <div class="text-sm font-semibold text-gray-900 dark:text-white">${c.name}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">ID: ${c.id} · ${count} ta mahsulot</div>
+              </div>
+              <button onclick="state.editingCategoryId='${c.id}'; render()" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-blue-900/30 flex items-center justify-center" title="Tahrirlash">${ic('sliders')}</button>
+              <button onclick="deleteCategory('${c.id}')" class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-zinc-800 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 flex items-center justify-center" title="O'chirish">${ic('trash')}</button>
+            </div>`;
+          }).join('') || '<div class="text-sm text-gray-500 text-center py-8">Kategoriyalar yo\'q</div>'}
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function attachEvents() {}
+
+// ===== INIT =====
+loadState();
+render();
+</script>
+</body>
+</html>
